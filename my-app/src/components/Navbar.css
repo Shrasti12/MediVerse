@@ -51,7 +51,7 @@
   /* display: flex; */
   justify-content: space-between;
   align-items: center;
-  height: 700px;
+  height: 900px;
   width: 100vw; /* FORCE full screen width */
   left: 0;
   position: relative;
@@ -66,7 +66,7 @@
 
  
 .logo {
-  font-size: 2rem;
+  font-size: 4rem;
   font-weight: bold;
   flex: 1;
   /* margin-top: -500px;      
@@ -74,7 +74,7 @@
 }
 
 .nav-links {
-  font-size: large;
+  font-size: x-large;
   list-style: none;
   display: flex;
   gap: 2rem;
@@ -93,7 +93,7 @@
   gap: 1rem;
   /* flex: 2; */
   justify-content: flex-end;
-  font-size: large;
+  font-size: x-large;
 }
 
 .nav-right li a:hover{
