@@ -1,0 +1,115 @@
+/* Common Dropdown Containers */
+.dropdown1, .dropdown2, .dropdown3, .Update{
+  position: relative;
+}
+
+.dropbtn, .Update {
+  cursor: pointer;
+  font-weight: 500;
+}
+.update{
+  color: white;
+}
+
+/* Dropdown Menus */
+.dropdown-menu1, .dropdown-menu2, .dropdown-menu3{
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #043f49;     /* updated */
+  padding: 0.5rem 0;
+  list-style: none;
+  min-width: 220px;
+  z-index: 1000;
+  border-radius: 4px;
+}
+
+.dropdown-menu1 li a,
+.dropdown-menu2 li a,
+.dropdown-menu3 li a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem 1rem;
+}
+
+.dropdown-menu1 li a:hover,
+.dropdown-menu2 li a:hover,
+.dropdown-menu3 li a:hover {
+  background-color: rgb(10, 128, 128);
+}
+
+/* Show dropdowns on hover */
+.dropdown1:hover .dropdown-menu1,
+.dropdown2:hover .dropdown-menu2,
+.dropdown3:hover .dropdown-menu3 {
+  display: block;
+}
+
+.main-navbar {
+  /* display: flex; */
+  justify-content: space-between;
+  align-items: center;
+  height: 700px;
+  width: 100vw; /* FORCE full screen width */
+  left: 0;
+  position: relative;
+  align-items: center;
+  /* background-color: red; */
+  background-image: url('/banner-bg.png');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  box-sizing: border-box;
+}
+
+ 
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  flex: 1;
+  /* margin-top: -500px;      
+  margin-right: -1000px; */
+}
+
+.nav-links {
+  font-size: large;
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  flex: 2;                     /*  keeps nav links area flexible */
+  justify-content: center;    /*  centers nav links horizontally */
+  align-items: flex-start;    /*  /* aligns nav links items to top */
+  margin: 10px;
+  padding: 0;
+  margin-top: -10px;            /*   shift nav links block upward */
+  position: absolute;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  /* flex: 2; */
+  justify-content: flex-end;
+  font-size: large;
+}
+
+.nav-right li a:hover{
+  text-decoration: underline;
+  text-decoration-color: rgb(47, 134, 134);
+  
+}
+
+.nav-right a {
+  color: white;
+  text-decoration: none;
+}
+
+.search-icon {
+  cursor: pointer;
+}
+.Tagline{
+  font-size: xxx-large;
+}
