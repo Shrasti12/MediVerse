@@ -57,7 +57,7 @@
   position: relative;
   align-items: center;
   /* background-color: red; */
-  background-image: url('/banner-bg.png');
+  background-image: url('/trial.jpg');
   background-size: cover;
   background-position: center;
   color: white;
@@ -112,4 +112,15 @@
 }
 .Tagline{
   font-size: xxx-large;
+}
+.Update a,
+.Update a:visited,
+.Update a:active {
+  color: white;
+  text-decoration: none;
+}
+
+.Update a:hover {
+  text-decoration: underline;
+  text-decoration-color: rgb(47, 134, 134);
 }

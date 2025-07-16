@@ -1,13 +1,15 @@
 .reimburse-container {
   min-height: 100vh;
   padding: 2rem;
-  max-width: 100%;
-  margin: auto;
   background-color: #f9f9f9;
-  height: 100%;
-  flex-direction: column;     
-  align-items: center; 
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;      
+  justify-content: center;  
+  position: relative;
 }
+
  .heading{
   color: #0cb7d6;
   font-size: 2rem;
@@ -18,12 +20,13 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  /* justify-content: center; */
+  justify-content: center; 
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   padding: 2rem;
   background: white;
-  /* width: 100%; */
+  width: 100%; 
+  max-width: 900px;
   
   
 }
@@ -59,11 +62,14 @@ button[type="submit"] {
   background-color: #0cb7d6;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  font-weight: bold;
-  margin-bottom: 1rem;
+  /* font-weight: bold;
+  margin-bottom: 1rem; */
   display: inline-block;
   transition: background-color 0.3s ease;
-  align-items: left;
+  /* align-items: left; */
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 .home-button:hover {

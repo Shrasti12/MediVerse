@@ -1,5 +1,6 @@
 import React, { useState } from 'react'; // to manage form data 
 import './UploadPrescription.css';
+import { Link  } from 'react-router-dom';
 
 const UploadPrescription = () => {
   const [formData, setFormData] = useState({
@@ -28,6 +29,9 @@ const UploadPrescription = () => {
 
   return (
     <div className="upload-page">
+      <Link to="/" className="home-button">
+        🏠 Home
+      </Link>
       <div className="form-card">
         <h2 className="form-title">Upload Prescription</h2>
         <form onSubmit={handleSubmit} className="form">

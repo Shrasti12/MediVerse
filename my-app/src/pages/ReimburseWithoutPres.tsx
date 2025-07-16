@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import './ReimburseWithoutPres.css';
+import { Link } from 'react-router-dom';
 
 function ReimbursementWithoutPrescription() {
   const [, setReimbursementType] = useState('');
   const [isChecked, setIsChecked] = useState(false);
 
   return (
+    
     <div className="reimburse-no-container">
+      <Link to="/" className="home-button">
+        🏠 Home
+      </Link>
       <h1 className="heading">Reimbursement (No Prescription)</h1>
 
       <form className="reimburse-no-form">

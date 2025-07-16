@@ -1,29 +1,32 @@
-import { useState } from 'react';
-import './ReimbursePres.css'; 
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import "./ReimbursePres.css";
+import { Link } from "react-router-dom";
 
 function ReimbursementWithPrescription() {
-  const [selectedDisease, setSelectedDisease] = useState('');
-  const [otherDisease, setOtherDisease] = useState('');
+  const [selectedDisease, setSelectedDisease] = useState("");
+  const [otherDisease, setOtherDisease] = useState("");
   const [prescriptionCount] = useState(1); // replace with actual count if available
 
   return (
     <div className="reimburse-container">
-      <Link to="/" className="home-button">🏠 Home</Link>
+      <Link to="/" className="home-button">
+        🏠 Home
+      </Link>
 
-
-      <h1 className='heading'>Reimbursement With Prescription</h1>
-      <p>
-        Enter Consultation Fee, Lab/Path test charges and Medicine cost related to one Prescription at a time in chronological order.
-        <br/>
+      <h1 className="heading">Reimbursement With Prescription</h1>
+      <p style={{ marginBottom: "1.5rem", textAlign: "center", color: "#333" }}>
+        Enter Consultation Fee, Lab/Path test charges and Medicine cost related
+        to one Prescription at a time in chronological order.
       </p>
 
       <form className="reimburse-form">
-        <label>Employee Name:
+        <label>
+          Employee Name:
           <input type="text" />
         </label>
 
-        <label>Financial Year:
+        <label>
+          Financial Year:
           <select>
             <option>2023-24</option>
             <option>2024-25</option>
@@ -31,32 +34,37 @@ function ReimbursementWithPrescription() {
           </select>
         </label>
 
-        <label>Prescription Sl.No:
+        <label>
+          Prescription Sl.No:
           <input type="number" value={prescriptionCount + 1} readOnly />
         </label>
 
-        
         {/* <label>Total Eligibility Amount:
           <input type="text" value="₹ Fund Available" readOnly />
         </label> */}
 
-        <label>Previous Balance:
-          <input type="number" placeholder='₹ Fund Available' />
+        <label>
+          Previous Balance:
+          <input type="number" placeholder="₹ Fund Available" />
         </label>
 
-        <label>Amount Claimed up to now:
-          <input type="number" placeholder="₹ Total Claimed"  />
+        <label>
+          Amount Claimed up to now:
+          <input type="number" placeholder="₹ Total Claimed" />
         </label>
 
-        <label>Balance Amount:
-          <input type="number" placeholder="₹ Balance Left"  />
+        <label>
+          Balance Amount:
+          <input type="number" placeholder="₹ Balance Left" />
         </label>
 
-        <label>Amount Being Claimed:
+        <label>
+          Amount Being Claimed:
           <input type="number" placeholder="Enter amount" />
         </label>
 
-        <label>Disease:
+        <label>
+          Disease:
           <select onChange={(e) => setSelectedDisease(e.target.value)}>
             <option value="">Select</option>
             <option value="Fever">Fever</option>
@@ -66,8 +74,9 @@ function ReimbursementWithPrescription() {
           </select>
         </label>
 
-        {selectedDisease === 'Other' && (
-          <label>Specify Disease:
+        {selectedDisease === "Other" && (
+          <label>
+            Specify Disease:
             <input
               type="text"
               value={otherDisease}
