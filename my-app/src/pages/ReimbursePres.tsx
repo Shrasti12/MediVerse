@@ -13,8 +13,8 @@ function ReimbursementWithPrescription() {
         🏠 Home
       </Link>
 
-      <h1 className="heading">Reimbursement With Prescription</h1>
-      <p style={{ marginBottom: "1.5rem", textAlign: "center", color: "#333" }}>
+      <h1 className="headingPres">Reimbursement With Prescription</h1>
+      <p style={{ marginBottom: "1.5rem", textAlign: "center", color: "#333", fontWeight: "bold" }}>
         Enter Consultation Fee, Lab/Path test charges and Medicine cost related
         to one Prescription at a time in chronological order.
       </p>

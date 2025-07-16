@@ -57,7 +57,7 @@
   position: relative;
   align-items: center;
   /* background-color: red; */
-  background-image: url('/trial.jpg');
+  background-image: url('/banner-bg.png');
   background-size: cover;
   background-position: center;
   color: white;

@@ -8,10 +8,20 @@
   align-items: center;      
   justify-content: center;  
   position: relative;
-}
+   background-image:
+  linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+  url('/trial2.png');
 
- .heading{
-  color: #0cb7d6;
+
+  background-repeat: no-repeat;     
+  background-size: cover;           
+  background-position: center;
+
+  
+
+}
+ .headingPres{
+  color: hwb(188 0% 85%);
   font-size: 2rem;
   margin-bottom: 1.5rem;      
   text-align: center;
@@ -27,15 +37,13 @@
   background: white;
   width: 100%; 
   max-width: 900px;
-  
-  
 }
 
 .reimburse-form label {
   display: flex;
   flex-direction: column;
   font-weight: 500;
-  color: #013f47;
+  color: hsl(187, 96%, 9%);
 }
 
 .reimburse-form input,

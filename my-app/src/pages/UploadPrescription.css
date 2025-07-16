@@ -4,7 +4,7 @@
 
   background-image:
   linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
-  url('/trial.jpg');
+  url('/trial2.png');
 
 
   background-repeat: no-repeat;     
@@ -42,10 +42,13 @@
 
 .form {
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
   display: flex;
   flex-direction: column;
   gap: 25px;
+  background: white;
+  border-radius: 9px;
+  
 }
 
 .form input {
