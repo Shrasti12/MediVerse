@@ -73,7 +73,7 @@ function UpdateDependent() {
           </label>
           <label>(Please Attach Self & Dependant Declaration Form)</label>
         </form>
-        <ul className="button-list">
+        <ul className="button-list" >
           <li>
             <button>Change Request</button>
             <button>Inactive</button>
