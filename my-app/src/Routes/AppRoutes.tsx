@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
-import Upload from '../pages/UploadPrescription';
+import UploadPrescription from '../pages/UploadPrescription';
 import ReimbursementWithPrescription from '../pages/ReimbursePres';
 import ReimbursementWithoutPrescription from '../pages/ReimburseWithoutPres';
 // import Login from '../pages/login';
@@ -17,7 +17,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home/>} />
-      <Route path="/upload" element={<Upload />} />
+      <Route path="/upload" element={<UploadPrescription />} />
       <Route path="/reimbursement/with" element={<ReimbursementWithPrescription />} />
       <Route path="/reimbursement/without" element={<ReimbursementWithoutPrescription />} />
       {/* <Route path="/login" element={<Login />}/> */}

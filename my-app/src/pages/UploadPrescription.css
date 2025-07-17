@@ -1,81 +1,236 @@
+/* === Layout === */
 .upload-page {
-  height: 100vh;
-  width: 100vw;
-
-  background-image:
-  linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
-  url('/trial2.png');
-
-
-  background-repeat: no-repeat;     
-  background-size: cover;           
-  background-position: center;
-
-
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  margin: 0;
+  min-height: 100vh;
+  /* background-color: hwb(69 13% 22%); */
+  font-family: 'Segoe UI', sans-serif;
+}
+.full-page-center {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  /* background-color: #cff10a; */
+  position: relative;
+}
+
+.sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 250px;
+}
+
+.form-wrapper {
+  margin-left: 250px;
 }
 
 
-.form-card {
-  width: 100%;
-  height: 100%;
-  padding: 60px;
-  box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.5);
+/* === Sidebar === */
+.sidebar {
+  width: 250px;
+  background-color: #013642;
+  color: white;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  overflow-y: auto;
+  align-items: flex-start;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
 }
 
-.form-title {
-  font-size: 36px;
+.sidebar-title {
+  font-size: 1.8rem;
   font-weight: bold;
-  color: #0077b6;
-  margin-bottom: 40px;
+  margin-bottom: 3rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: 0.3s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: #00cfe8;
+}
+
+/* === Main Content === */
+.upload-container {
+    flex: 1;
+  display: flex;
+  justify-content: center;   /* center form horizontally */
+  align-items: center;       /* center form vertically */
+  background-color: hsl(192, 76%, 22%);
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+
+/* === Form Card === */
+.form-section {
+  width: 100%;
+  max-width: 850px;
+  background-color: #f5f9fb;
+  border-radius: 20px;
+  padding: 3rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.headingU {
+  color: #024b5e;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
   text-align: center;
 }
 
-.form {
+/* === Form Sections === */
+fieldset {
+  border: none;
+  margin-bottom: 2rem;
+}
+
+legend {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #0c4c60;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #d4e4e9;
+  padding-bottom: 0.5rem;
+}
+
+/* === Grid Layout === */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* === Inputs & Selects === */
+input,
+select {
+  padding: 0.8rem 1rem;
+  border: 1px solid #cbd6dc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  font-size: 1rem;
   width: 100%;
-  max-width: 900px;
+}
+
+input[readonly] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+/* === File Upload Box === */
+.file-upload {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  background: white;
-  border-radius: 9px;
-  
 }
 
-.form input {
+.file-upload label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* === Drag & Drop Style Upload Box === */
+.upload-box {
+  border: 2px dashed #00cfe8;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 12px;
+  background: #f9f9f9;
+  position: relative;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.upload-box:hover {
+  background: #eefbfc;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  color: #00cfe8;
+  margin-bottom: 0.5rem;
+}
+
+.file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 16px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 18px;
-  background-color: #f1f1f1;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
-.form input:focus {
-  outline: none;
-  background-color: #e0f7fa;
-}
-
-.form button {
-  padding: 16px;
-  background-color: #0077b6;
+/* === Submit Button === */
+.submit-btn-U {
+  background-color: #024b5e;
   color: white;
-  font-size: 20px;
+  padding: 0.9rem 2rem;
+  font-size: 1.1rem;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.3s ease;
+  margin-top: 2rem;
+  font-weight: 500;
+  letter-spacing: 1px;
 }
 
-.form button:hover {
-  background-color: #023e8a;
-} 
+.submit-btn-U:hover {
+  background-color: #013e4f;
+}
+
+/* === Scrollbar Styling (optional) === */
+.form-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-section::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.form-section::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 10px;
+}
+.submitted-table {
+  margin-top: 2rem;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 850px;
+}
+
+.submitted-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.submitted-table th,
+.submitted-table td {
+  border: 1px solid #ccc;
+  padding: 0.8rem;
+  text-align: center;
+}
