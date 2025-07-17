@@ -1,7 +1,7 @@
 ﻿# MediVerse
 
 
-MEdiverse is a **medical reimbursement application** built for employees to simplify the submission, tracking, and management of medical reimbursement claims efficiently and transparently.
+Mediverse is a **medical reimbursement application** built for employees to simplify the submission, tracking, and management of medical reimbursement claims efficiently and transparently.
 
 ---
 
@@ -46,7 +46,7 @@ Follow these steps to get the project running locally:
 
 1. Clone this repository:
     ```bash
-    git clone https://github.com/yourusername/MEdiverse.git
+    git clone https://github.com/yourusername/Mediverse.git
     ```
 
 2. Move into the project directory:
@@ -68,11 +68,6 @@ Follow these steps to get the project running locally:
 
 ---
 
-## 📸 Screenshots / Demo
-
-*Currently no screenshots or demo available.*
-
----
 
 ## 👩‍💻 Author
 
@@ -82,15 +77,5 @@ GitHub: [https://github.com/Shrasti12](https://github.com/Shrasti12)
 
 ---
 
-## 📄 License
 
-*Add your license info here if you want (e.g., MIT License)*
-
----
-
-## 📞 Contact / Feedback
-
-Feel free to open issues or reach out if you want to contribute or have feedback.
-
----
 
