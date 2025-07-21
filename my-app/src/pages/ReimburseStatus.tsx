@@ -2,7 +2,7 @@ import './UploadPrescription.css';
 import { useState } from 'react';
 import Sidebar from "../components/sideBar";
 
-import { Link, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 function ReimburseStatus() {
   const navigate = useNavigate(); // ✅ Hook to navigate
