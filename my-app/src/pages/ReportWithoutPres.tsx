@@ -1,7 +1,7 @@
 // import './ReportWithoutPres.css'; 
 import { Link, useNavigate } from 'react-router-dom';
 
-
+import Sidebar from "../components/sideBar";
 import './UploadPrescription.css'; 
 import { useState } from 'react';
 
@@ -25,7 +25,7 @@ function ReportWithoutPres() {
 
   return (
     <div className="upload-page">
-      <aside className="sidebar">
+      {/* <aside className="sidebar">
         <h2 className="sidebar-title">MediVerse</h2>
 
         <nav className="sidebar-nav">
@@ -46,7 +46,8 @@ function ReportWithoutPres() {
             <i className="fa fa-cog"></i> Settings
           </button>
         </nav>
-      </aside>
+      </aside> */}
+      <Sidebar/>
 
       <main className="upload-container">
        

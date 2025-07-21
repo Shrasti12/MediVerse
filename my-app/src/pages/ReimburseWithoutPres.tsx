@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./UploadPrescription.css";
+import Sidebar from "../components/sideBar";
 
 interface ReimburseFormData {
   empName: string;
@@ -67,7 +68,7 @@ const ReimbursementWithoutPrescription = () => {
 
   return (
     <div className="upload-page">
-      <aside className="sidebar">
+      {/* <aside className="sidebar">
         <h2 className="sidebar-title">MediVerse</h2>
         <nav className="sidebar-nav">
            <Link to="/" className="nav-item">
@@ -84,7 +85,8 @@ const ReimbursementWithoutPrescription = () => {
             <i className="fa fa-cog"></i> Settings
           </button>
         </nav>
-      </aside>
+      </aside> */}
+      <Sidebar/>
 
       
 

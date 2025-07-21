@@ -2,6 +2,7 @@ import "./UploadPrescription.css";
 import { City, State } from "country-state-city";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Sidebar from "../components/sideBar";
 
 function HospitalList() {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ function HospitalList() {
 
   return (
     <div className="upload-page">
-      <aside className="sidebar">
+      {/* <aside className="sidebar">
         <h2 className="sidebar-title">MediVerse</h2>
         <nav className="sidebar-nav">
           <button className="nav-item">
@@ -68,7 +69,8 @@ function HospitalList() {
             <i className="fa fa-cog"></i> Settings
           </button>
         </nav>
-      </aside>
+      </aside> */}
+      <Sidebar/>
 
       <main className="upload-container">
         <div className="form-table-wrapper">

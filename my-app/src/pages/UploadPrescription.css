@@ -34,7 +34,7 @@
 
 /* 
 === Sidebar === */
-.sidebar {
+/* .sidebar {
   width: 250px;
   background-color: #013642;
   color: white;
@@ -76,7 +76,7 @@
 .nav-item:hover,
 .nav-item.active {
   color: #00cfe8;
-}
+} */
 
 /* === Main Content === */
 .upload-container {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./UploadPrescription.css";
 import { Link } from "react-router-dom";
+import Sidebar from "../components/sideBar";
 
 const Approve: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -34,7 +35,7 @@ const Approve: React.FC = () => {
 
   return (
     <div className="main-container">
-      <aside className="sidebar">
+      {/* <aside className="sidebar">
         <h2 className="sidebar-title">MediVerse</h2>
         <nav className="sidebar-nav">
           <Link to="/" className="nav-item">
@@ -50,7 +51,8 @@ const Approve: React.FC = () => {
             <i className="fa fa-cog"></i> Settings
           </button>
         </nav>
-      </aside>
+      </aside> */}
+      <Sidebar/>
 
       <main className="upload-container">
         <form className="form-section">

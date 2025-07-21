@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./UploadPrescription.css";
+import Sidebar from "../components/sideBar";
 
 interface DependentFormData {
   dependentName: string;
@@ -71,7 +72,7 @@ const UpdateDependent = () => {
 
   return (
     <div className="upload-page">
-      <aside className="sidebar">
+      {/* <aside className="sidebar">
         <h2 className="sidebar-title">MediVerse</h2>
 
         <nav className="sidebar-nav">
@@ -92,7 +93,8 @@ const UpdateDependent = () => {
             <i className="fa fa-cog"></i> Settings
           </button>
         </nav>
-      </aside>
+      </aside> */}
+      <Sidebar/>
 
       <main className="upload-container">
         <div className="form-table-wrapper">
