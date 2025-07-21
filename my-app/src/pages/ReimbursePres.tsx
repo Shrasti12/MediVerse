@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./UploadPrescription.css";
-import { Link } from "react-router-dom";
+
 import Sidebar from "../components/sideBar";
 
 interface ReimburseData {

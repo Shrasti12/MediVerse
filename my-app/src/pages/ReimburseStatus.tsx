@@ -16,7 +16,7 @@ function ReimburseStatus() {
 
 
   const handleBack = () => {
-    navigate("/"); // ✅ Navigates to home page
+    navigate("/"); 
   };
 
   return (
