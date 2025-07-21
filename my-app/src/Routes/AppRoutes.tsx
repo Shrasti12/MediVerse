@@ -13,6 +13,7 @@ import HospitalList from '../pages/HospitalList';
 import ReportWithoutPres from '../pages/ReportWithoutPres';
 import UpdateDependent from '../pages/UpdateDependent';
 
+
 const AppRoutes = () => {
   return (
     <Routes>

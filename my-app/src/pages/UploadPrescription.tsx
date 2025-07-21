@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./UploadPrescription.css";
 import { Link } from "react-router-dom";
+import Layout from "../components/layout";
 
 interface FormData {
   empName: string;
@@ -69,8 +70,9 @@ const UploadPrescription = () => {
   const handleBack = () => setSubmittedData((prev) => prev.slice(0, -1));
 
   return (
+    <Layout>
     <div className="upload-page">
-      <aside className="sidebar">
+      {/* <aside className="sidebar">
         <h2 className="sidebar-title">MediVerse</h2>
         <nav className="sidebar-nav">
           <Link to="/" className="nav-item">
@@ -86,7 +88,7 @@ const UploadPrescription = () => {
             <i className="fa fa-cog"></i> Settings
           </button>
         </nav>
-      </aside>
+      </aside> */}
 
       <main className="upload-container">
         <div className="form-section">
@@ -281,6 +283,7 @@ const UploadPrescription = () => {
         )}
       </main>
     </div>
+    </Layout>
   );
 };
 

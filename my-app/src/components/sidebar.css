@@ -1,0 +1,36 @@
+.sidebar {
+  width: 250px;
+  background-color: #1e293b; /* dark blue gray */
+  color: white;
+  padding: 1rem;
+  height: 100vh;
+  position: fixed;
+}
+
+.menu-item {
+  margin: 1rem 0;
+}
+
+.menu-item div {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background-color: #334155;
+}
+
+.menu-item ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background-color: #475569;
+}
+
+.menu-item ul li {
+  margin: 0.5rem 0;
+}
+
+.menu-item ul li a {
+  color: white;
+  text-decoration: none;
+}
