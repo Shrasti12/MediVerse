@@ -33,7 +33,7 @@ const ReimburseWithPrescription = () => {
   };
 
   const [formData, setFormData] = useState<ReimburseData>(initialState);
-  const [submitted, setSubmitted] = useState<ReimburseData[]>([]);
+  // const [setSubmitted] = useState<ReimburseData[]>([]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -52,7 +52,7 @@ const ReimburseWithPrescription = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.declarationAccepted) {
-      setSubmitted((prev) => [...prev, formData]);
+      // setSubmitted((prev) => [...prev, formData]);
       setFormData(initialState);
     } else {
       alert("Please accept the declaration before submitting.");

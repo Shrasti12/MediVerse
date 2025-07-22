@@ -99,10 +99,10 @@
   text-decoration: none;
 }
 
-.nav-item:hover {
+/* .nav-item:hover {
   background-color: #2e2e42;
   border-radius: 6px;
-}
+} */
 
 .nav-group {
   display: flex;
@@ -126,6 +126,10 @@
 }
 
 .dropdown-link:hover {
+  background-color: hsl(184, 82%, 24%);
+}
+
+.nav-item:hover {
   background-color: hsl(184, 82%, 24%);
 }
 
