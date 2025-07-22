@@ -3,7 +3,7 @@ import Home from '../pages/Home';
 import UploadPrescription from '../pages/UploadPrescription';
 import ReimbursementWithPrescription from '../pages/ReimbursePres';
 import ReimbursementWithoutPrescription from '../pages/ReimburseWithoutPres';
-// import Login from '../pages/login';
+
 import Approve from '../pages/Approve';
 import Dependent from '../pages/Dependent';
 import PresStatus from '../pages/PresStatus';
@@ -12,6 +12,8 @@ import ReImburseReport from '../pages/ReimburseReport';
 import HospitalList from '../pages/HospitalList';
 import ReportWithoutPres from '../pages/ReportWithoutPres';
 import UpdateDependent from '../pages/UpdateDependent';
+import Login from '../pages/Login';
+import Signup from '../pages/signup';
 
 
 const AppRoutes = () => {
@@ -21,7 +23,8 @@ const AppRoutes = () => {
       <Route path="/upload" element={<UploadPrescription />} />
       <Route path="/reimbursement/with" element={<ReimbursementWithPrescription />} />
       <Route path="/reimbursement/without" element={<ReimbursementWithoutPrescription />} />
-      {/* <Route path="/login" element={<Login />}/> */}
+      <Route path="/signup" element={<Signup/>}/>
+      <Route path="/login" element={<Login />}/>
       <Route path="/approve" element={<Approve/>}/>
       <Route path="/dependent" element={<Dependent/>}/>
       <Route path="/PresStatus" element={<PresStatus/>}/>
