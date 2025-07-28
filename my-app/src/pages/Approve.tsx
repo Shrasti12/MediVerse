@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./UploadPrescription.css";
 
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
 
 const Approve: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -52,7 +52,7 @@ const Approve: React.FC = () => {
           </button>
         </nav>
       </aside> */}
-      <Sidebar/>
+      {/* <Sidebar/> */}
 
       <main className="upload-container">
         <form className="form-section">

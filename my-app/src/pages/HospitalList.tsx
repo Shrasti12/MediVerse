@@ -2,7 +2,7 @@ import "./UploadPrescription.css";
 import { City, State } from "country-state-city";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
 
 function HospitalList() {
   const navigate = useNavigate();
@@ -70,10 +70,10 @@ function HospitalList() {
           </button>
         </nav>
       </aside> */}
-      <Sidebar/>
+      {/* <Sidebar/> */}
 
       <main className="upload-container">
-        <div className="form-table-wrapper">
+        
           <form className="form-section" onSubmit={handleSubmit}>
             <h1 className="heading">Hospital Master</h1>
 
@@ -137,7 +137,7 @@ function HospitalList() {
               </button>
             </div>
           </form>
-        </div>
+        
       </main>
     </div>
   );

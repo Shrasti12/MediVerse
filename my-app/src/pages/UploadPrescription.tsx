@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./UploadPrescription.css";
 
 // import Layout from "../components/layout";
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
 
 interface FormData {
   empName: string;
@@ -73,7 +73,7 @@ const UploadPrescription = () => {
   return (
     // <Layout>
     <div className="upload-page">
-      <Sidebar/>
+      {/* <Sidebar/> */}
       {/* <aside className="sidebar">
         <h2 className="sidebar-title">MediVerse</h2>
         <nav className="sidebar-nav">

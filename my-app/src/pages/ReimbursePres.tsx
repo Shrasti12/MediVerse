@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./UploadPrescription.css";
 
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
 
 interface ReimburseData {
   empName: string;
@@ -83,7 +83,7 @@ const ReimburseWithPrescription = () => {
           </button>
         </nav>
       </aside> */}
-      <Sidebar/>
+      {/* <Sidebar/> */}
 
       <main className="upload-container">
         <form className="form-section" onSubmit={handleSubmit}>

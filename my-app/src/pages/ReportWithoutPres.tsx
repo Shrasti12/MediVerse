@@ -1,7 +1,7 @@
 // import './ReportWithoutPres.css'; 
 import { useNavigate } from 'react-router-dom';
 
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
 import './UploadPrescription.css'; 
 import { useState } from 'react';
 
@@ -47,11 +47,11 @@ function ReportWithoutPres() {
           </button>
         </nav>
       </aside> */}
-      <Sidebar/>
+      {/* <Sidebar/> */}
 
       <main className="upload-container">
        
-        <div className="form-table-wrapper">
+        
           <form className="form-section" onSubmit={handleSubmit}>
             <h1 className="heading">REIMBURSEMENT (WITHOUT PRESCRIPTION REPORT)</h1>
              <div className="form-group" style={{ margin: "1.5rem 0" }}>
@@ -99,7 +99,7 @@ function ReportWithoutPres() {
               </button>
             </div>
           </form>
-        </div>
+       
       </main>
     </div>
   );

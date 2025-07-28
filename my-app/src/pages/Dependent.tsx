@@ -1,5 +1,5 @@
 import "./UploadPrescription.css";
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
 import { useNavigate } from "react-router-dom";
 
 function Dependent() {
@@ -38,11 +38,11 @@ function Dependent() {
           </button>
         </nav>
       </aside> */}
-      <Sidebar/>
+      {/* <Sidebar/> */}
 
       <main className="upload-container">
        
-        <div className="form-table-wrapper">
+        
           <form className="form-section" onSubmit={handleSubmit}>
             <h1 className="heading">DEPENDENT DETAILS</h1>
 
@@ -64,7 +64,7 @@ function Dependent() {
               </button>
             </div>
           </form>
-        </div>
+        
       </main>
     </div>
   );

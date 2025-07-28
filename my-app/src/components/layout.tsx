@@ -1,13 +1,14 @@
 import React from "react";
-import "./sidebar.css";
+import { Outlet } from "react-router-dom";
 import Sidebar from "./sideBar";
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
+const Layout: React.FC = () => {
   return (
-    <div style={{ display: "flex" }}>
+    <div className="upload-page">
       <Sidebar />
-      <div style={{ marginLeft: "250px", width: "100%", padding: "2rem" }}>
-        {children}
-      </div>
+      <main className="upload-container">
+        <Outlet /> {/* This will render the current page content */}
+      </main>
     </div>
   );
 };

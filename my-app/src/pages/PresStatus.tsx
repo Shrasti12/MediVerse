@@ -1,6 +1,6 @@
  
 import "./UploadPrescription.css";
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
 import {useNavigate } from "react-router-dom";
 
 function PresStatus() {
@@ -39,11 +39,11 @@ function PresStatus() {
           </button>
         </nav>
       </aside> */}
-      <Sidebar/>
+      {/* <Sidebar/> */}
 
       <main className="upload-container">
        
-        <div className="form-table-wrapper">
+        
           <form className="form-section" onSubmit={handleSubmit}>
             <h1 className="heading">Status of Prescription(s) Uploaded</h1>
            
@@ -66,7 +66,7 @@ function PresStatus() {
               </button>
             </div>
           </form>
-        </div>
+        
       </main>
     </div>
   );

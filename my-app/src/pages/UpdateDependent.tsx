@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import { Link } from "react-router-dom";
 import "./UploadPrescription.css";
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
 
 interface DependentFormData {
   dependentName: string;
@@ -94,7 +94,7 @@ const UpdateDependent = () => {
           </button>
         </nav>
       </aside> */}
-      <Sidebar/>
+      {/* <Sidebar/> */}
 
       <main className="upload-container">
         <div className="form-table-wrapper">
