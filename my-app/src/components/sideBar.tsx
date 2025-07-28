@@ -44,7 +44,7 @@ const Sidebar = () => {
             className="nav-item"
             onClick={() => toggleDropdown("dependent")}
           >
-            <Link to="/update/dependent" className="dropdown-link">
+            <Link to="/update/dependent" className="update">
               Update Dependent Details
             </Link>
           </button>

@@ -24,7 +24,7 @@ const Navbar = () => {
             </li>
           </ul>
         </li>
-        <li className="Update">
+        <li className="update">
           <Link to="Update/dependent">Update Dependent Details</Link>
         </li>
         <li className="dropdown2">
