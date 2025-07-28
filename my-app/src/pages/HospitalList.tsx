@@ -1,6 +1,6 @@
 import "./UploadPrescription.css";
 import { City, State } from "country-state-city";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Sidebar from "../components/sideBar";
 
