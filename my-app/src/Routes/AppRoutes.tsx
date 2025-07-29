@@ -19,7 +19,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/" element={<Home />} />   {/* ✅ No Sidebar */}
+      <Route path="/" element={<Home />} />   {/*  No Sidebar */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       
