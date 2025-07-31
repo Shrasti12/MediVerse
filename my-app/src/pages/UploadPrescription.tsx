@@ -36,22 +36,25 @@ const UploadPrescription = () => {
   const [states, setStates] = useState<string[]>([]);
   const [districts, setDistricts] = useState<string[]>([]);
 
-  // ✅ Fetch states on page load
   useEffect(() => {
-  const fetchStates = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:60266/Employees/PresscriptionDetails.aspx/BindStateName"
-      );
-      console.log("States fetched:", response.data.d);
-      setStates(response.data.d);
-    } catch (error) {
-      console.error("Error fetching states:", error);
-    }
-  };
-  fetchStates();
-}, []);
-
+    const fetchStates = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/StateService.asmx/GetStates",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("States fetched:", response.data);
+        setStates(response.data); // This should be an array of state names
+      } catch (error) {
+        console.error("Error loading states:", error);
+      }
+    };
+    fetchStates();
+  }, []);
 
   // ✅ Fetch districts when state is selected
   const handleStateChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -150,7 +153,7 @@ const UploadPrescription = () => {
                 >
                   <option value="">Select State</option>
                   {states.map((state: string, idx: number) => (
-                    <option key={idx} value={idx + 1}>
+                    <option key={idx} value={state}>
                       {state}
                     </option>
                   ))}
