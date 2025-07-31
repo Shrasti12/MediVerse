@@ -1,67 +1,7 @@
-/* .sidebar {
-  width: 250px;
-  height: 100vh;
-  background-color: #0a3846;;
-  color: white;
-  padding: 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow-y: auto;
-}
 
-.sidebar-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  color: white;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-}
-
-.nav-item {
-  background: none;
-  border: none;
-  color: white;
-  text-align: left;
-  padding: 10px 0;
-  font-size: 16px;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.nav-item:hover {
-  color: #00c9a7;
-}
-
-.nav-group {
-  margin-bottom: 20px;
-}
-
-.dropdown-content {
-  padding-left: 15px;
-  display: flex;
-  flex-direction: column;
-  
-}
-
-.dropdown-link {
-  color: white;
-  text-decoration: none;
-  padding: 5px 0;
-  
-}
-
-.dropdown-link:hover {
-  color: #00c9a7;
-  text-decoration: underline;
-} */
 .sidebar {
   width: 250px;
-  background-color: #0a3a41;
+  background-color: #86ae80;
   color: white;
   height: 100vh;
   padding: 20px;
@@ -126,11 +66,11 @@
 }
 
 .dropdown-link:hover {
-  background-color: hsl(184, 82%, 24%);
+  background-color: hsl(100, 31%, 42%);
 }
 
 .nav-item:hover {
-  background-color: hsl(184, 82%, 24%);
+  background-color: hsl(100, 31%, 42%);
 }
 
 /* Remove blue/purple visited styles */

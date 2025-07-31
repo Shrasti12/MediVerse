@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./UploadPrescription.css";
-
-// import Layout from "../components/layout";
-// import Sidebar from "../components/sideBar";
 
 interface FormData {
   empName: string;
@@ -35,6 +33,43 @@ const UploadPrescription = () => {
 
   const [formData, setFormData] = useState<FormData>(initialState);
   const [submittedData, setSubmittedData] = useState<FormData[]>([]);
+  const [states, setStates] = useState<string[]>([]);
+  const [districts, setDistricts] = useState<string[]>([]);
+
+  // ✅ Fetch states on page load
+  useEffect(() => {
+  const fetchStates = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:60266/Employees/PresscriptionDetails.aspx/BindStateName"
+      );
+      console.log("States fetched:", response.data.d);
+      setStates(response.data.d);
+    } catch (error) {
+      console.error("Error fetching states:", error);
+    }
+  };
+  fetchStates();
+}, []);
+
+
+  // ✅ Fetch districts when state is selected
+  const handleStateChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedState = e.target.value;
+    setFormData((prev) => ({ ...prev, state: selectedState }));
+
+    try {
+      const response = await axios.post(
+        "http://localhost:60266/Employees/PresscriptionDetails.aspx/GetDistricts",
+        JSON.stringify({ stateCode: parseInt(selectedState) }),
+        { headers: { "Content-Type": "application/json" } }
+      );
+      console.log("Districts fetched:", response.data.d);
+      setDistricts(response.data.d);
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -64,34 +99,11 @@ const UploadPrescription = () => {
     setFormData(initialState);
   };
 
-  
-
   const handleClear = () => setFormData(initialState);
-
   const handleBack = () => setSubmittedData((prev) => prev.slice(0, -1));
 
   return (
-    // <Layout>
     <div className="upload-page">
-      {/* <Sidebar/> */}
-      {/* <aside className="sidebar">
-        <h2 className="sidebar-title">MediVerse</h2>
-        <nav className="sidebar-nav">
-          <Link to="/" className="nav-item">
-            Home
-          </Link>
-          <button className="nav-item active">
-            <i className="fa fa-plus-circle"></i> New Claim
-          </button>
-          <button className="nav-item">
-            <i className="fa fa-check-circle"></i> Track Status
-          </button>
-          <button className="nav-item">
-            <i className="fa fa-cog"></i> Settings
-          </button>
-        </nav>
-      </aside>  */}
-
       <main className="upload-container">
         <div className="form-section">
           <form onSubmit={handleSubmit}>
@@ -130,22 +142,34 @@ const UploadPrescription = () => {
             <fieldset>
               <legend>Hospital / Doctor</legend>
               <div className="grid-2">
-                <input
-                  type="text"
+                <select
                   name="state"
                   value={formData.state}
-                  onChange={handleChange}
-                  placeholder="State*"
+                  onChange={handleStateChange}
                   required
-                />
-                <input
-                  type="text"
+                >
+                  <option value="">Select State</option>
+                  {states.map((state: string, idx: number) => (
+                    <option key={idx} value={idx + 1}>
+                      {state}
+                    </option>
+                  ))}
+                </select>
+
+                <select
                   name="district"
                   value={formData.district}
                   onChange={handleChange}
-                  placeholder="District*"
                   required
-                />
+                >
+                  <option value="">Select District</option>
+                  {districts.map((district: string, idx: number) => (
+                    <option key={idx} value={district}>
+                      {district}
+                    </option>
+                  ))}
+                </select>
+
                 <input
                   type="text"
                   name="hospital"
@@ -285,7 +309,6 @@ const UploadPrescription = () => {
         )}
       </main>
     </div>
-    // </Layout>
   );
 };
 

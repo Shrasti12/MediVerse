@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "proxy": "http://localhost:60266"
+
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
@@ -37,4 +39,6 @@
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.3"
   }
+
+  
 }
