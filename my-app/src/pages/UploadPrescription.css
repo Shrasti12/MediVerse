@@ -1,13 +1,5 @@
 @import "tailwindcss";
 
-
-
-
-
-
-
-
-
 /* === Layout === */
 .upload-page {
   display: flex;
@@ -23,7 +15,7 @@
   position: relative;
 }
 
-.sidebar {
+/* .sidebar {
   width: 1.6rem;
   background-color: #013642;
   color: white;
@@ -35,7 +27,7 @@
   border-bottom-left-radius: 20px;
   min-height: 100vh;
   
-}
+} */
 
 .link{
   color: #00cfe8;
@@ -363,7 +355,7 @@ body.dark-mode,
 }
 /* Sidebar default (light) styles */
 /* Sidebar default (light) styles */
-.sidebar {
+/* .sidebar {
   width: 250px;
   background-color: #45a06b;
   color: white;
@@ -374,7 +366,7 @@ body.dark-mode,
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   min-height: 100vh;
-}
+} */
 
 /* Dark mode sidebar */
 .upload-page.dark .sidebar {

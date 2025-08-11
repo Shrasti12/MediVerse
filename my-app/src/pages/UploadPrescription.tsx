@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./UploadPrescription.css";
-
+import Sidebar from "../components/sideBar";
 interface FormData {
   empName: string;
   relation: string;
@@ -66,32 +66,7 @@ const UploadPrescription = () => {
         setStates([]);
       }
     };
-    const fetchDistricts = async () => {
-      if (!selectedState) return;
-
-      try {
-        const response = await axios.get(
-          `http://localhost:60266/WS/StateService.asmx/GetDistricts?stateCode=${selectedState}`,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-
-        const data = Array.isArray(response.data)
-          ? response.data
-          : response.data?.d;
-
-        if (Array.isArray(data)) {
-          setDistricts(data);
-        } else {
-          console.error("Unexpected districts data format:", data);
-          setDistricts([]);
-        }
-      } catch (error) {
-        console.error("Error fetching districts:", error);
-        setDistricts([]);
-      }
-    };
+   
 
     fetchStates();
   }, []);
@@ -225,8 +200,6 @@ const UploadPrescription = () => {
           "http://localhost:60266/WS/StateService.asmx/GetDoctorTypes",
           { headers: { Accept: "application/json" } }
         );
-       
-
 
         // The actual data will be in response.data (or response.data.d if wrapped)
         if (Array.isArray(response.data)) {
@@ -236,14 +209,14 @@ const UploadPrescription = () => {
         } else {
           console.error("Unexpected doctor types format");
           setDoctorTypes([]);
-        } console.log("Doctor types response data:", response.data);
+        }
+        console.log("Doctor types response data:", response.data);
       } catch (error) {
         console.error("Error fetching doctor types:", error);
         setDoctorTypes([]);
       }
-      
     };
-    
+
     fetchDoctorTypes();
   }, []);
 
@@ -298,8 +271,8 @@ const UploadPrescription = () => {
                   placeholder="Employee Name"
                   required
                 />
-                <input type="text" placeholder="S.No" value="6" readOnly />
-                <input type="text" placeholder="Attempts" value="1" readOnly />
+                {/* <input type="text" placeholder="S.No" value="6" readOnly />
+                <input type="text" placeholder="Attempts" value="1" readOnly /> */}
                 <select
                   name="relation"
                   value={formData.relation}
