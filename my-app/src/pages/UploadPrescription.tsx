@@ -31,48 +31,221 @@ const UploadPrescription = () => {
     prescriptionFile: null,
   };
 
+  const [states, setStates] = useState<State[]>([]);
   const [formData, setFormData] = useState<FormData>(initialState);
   const [submittedData, setSubmittedData] = useState<FormData[]>([]);
-  const [states, setStates] = useState<string[]>([]);
-  const [districts, setDistricts] = useState<string[]>([]);
+  // const [states, setStates] = useState<any[]>([]);
+
+  interface State {
+    Id: number;
+    Name: string;
+  }
 
   useEffect(() => {
     const fetchStates = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:60266/WS/StateService.asmx/GetStates",
+          "http://localhost:60266/WS/StateService.asmx/GetStates?x=test",
           {
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
           }
         );
-        console.log("States fetched:", response.data);
-        setStates(response.data); // This should be an array of state names
+
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.d;
+
+        if (Array.isArray(data)) {
+          setStates(data);
+        } else {
+          console.error("Unexpected states data format:", data);
+          setStates([]);
+        }
       } catch (error) {
         console.error("Error loading states:", error);
+        setStates([]);
       }
     };
+    const fetchDistricts = async () => {
+      if (!selectedState) return;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:60266/WS/StateService.asmx/GetDistricts?stateCode=${selectedState}`,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.d;
+
+        if (Array.isArray(data)) {
+          setDistricts(data);
+        } else {
+          console.error("Unexpected districts data format:", data);
+          setDistricts([]);
+        }
+      } catch (error) {
+        console.error("Error fetching districts:", error);
+        setDistricts([]);
+      }
+    };
+
     fetchStates();
   }, []);
 
-  // ✅ Fetch districts when state is selected
-  const handleStateChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedState = e.target.value;
-    setFormData((prev) => ({ ...prev, state: selectedState }));
+  const [selectedState, setSelectedState] = useState<number | null>(null);
 
-    try {
-      const response = await axios.post(
-        "http://localhost:60266/Employees/PresscriptionDetails.aspx/GetDistricts",
-        JSON.stringify({ stateCode: parseInt(selectedState) }),
-        { headers: { "Content-Type": "application/json" } }
-      );
-      console.log("Districts fetched:", response.data.d);
-      setDistricts(response.data.d);
-    } catch (error) {
-      console.error("Error fetching districts:", error);
-    }
+  const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const stateId = parseInt(event.target.value);
+    setSelectedState(stateId);
   };
+  interface District {
+    Id: number;
+    Name: string;
+  }
+  const [districts, setDistricts] = useState<District[]>([]);
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      if (!selectedState) return;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:60266/WS/StateService.asmx/GetDistricts?stateCode=${selectedState}`,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.d;
+
+        if (Array.isArray(data)) {
+          setDistricts(data);
+        } else {
+          console.error("Unexpected districts data format:", data);
+          setDistricts([]);
+        }
+      } catch (error) {
+        console.error("Error fetching districts:", error);
+        setDistricts([]);
+      }
+    };
+
+    fetchDistricts();
+  }, [selectedState]);
+
+  // const [hospitals, setHospitals] = useState<string[]>([]);
+  const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
+
+  const handleDistrictChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const districtId = parseInt(event.target.value);
+    setSelectedDistrict(districtId);
+  };
+  interface Hospital {
+    Id: number;
+    Name: string;
+  }
+
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      if (!selectedDistrict || !selectedDistrict) return;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:60266/WS/StateService.asmx/GetHospitals?districtCode=${selectedDistrict}&stateCode=${selectedState}`,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.d;
+        //  console.log("Selected State:", selectedState, "Selected District:", selectedDistrict);
+
+        if (Array.isArray(data)) {
+          setHospitals(data);
+        } else {
+          console.error("Unexpected hospital data format:", data);
+          setHospitals([]);
+        }
+      } catch (error) {
+        console.error("Error fetching hospitals:", error);
+        setHospitals([]);
+      }
+    };
+
+    fetchHospitals();
+  }, [selectedDistrict]);
+
+  const [diseases, setDiseases] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchDiseases = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/StateService.asmx/GetDiseases",
+          { headers: { "Content-Type": "application/json" } }
+        );
+
+        // ASMX typically returns data inside 'd'
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.d;
+
+        if (Array.isArray(data)) {
+          setDiseases(data);
+        } else {
+          console.error("Unexpected response format:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching diseases:", error);
+      }
+    };
+
+    fetchDiseases();
+  }, []);
+  interface DoctorType {
+    Id: number;
+    Name: string;
+  }
+
+  const [doctorTypes, setDoctorTypes] = useState<DoctorType[]>([]);
+  useEffect(() => {
+    const fetchDoctorTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/StateService.asmx/GetDoctorTypes",
+          { headers: { Accept: "application/json" } }
+        );
+       
+
+
+        // The actual data will be in response.data (or response.data.d if wrapped)
+        if (Array.isArray(response.data)) {
+          setDoctorTypes(response.data);
+        } else if (response.data.d && Array.isArray(response.data.d)) {
+          setDoctorTypes(response.data.d);
+        } else {
+          console.error("Unexpected doctor types format");
+          setDoctorTypes([]);
+        } console.log("Doctor types response data:", response.data);
+      } catch (error) {
+        console.error("Error fetching doctor types:", error);
+        setDoctorTypes([]);
+      }
+      
+    };
+    
+    fetchDoctorTypes();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -104,6 +277,8 @@ const UploadPrescription = () => {
 
   const handleClear = () => setFormData(initialState);
   const handleBack = () => setSubmittedData((prev) => prev.slice(0, -1));
+  // console.log("Hospitals list:", hospitals);
+  console.log("Selected hospital:", formData.hospital);
 
   return (
     <div className="upload-page">
@@ -148,39 +323,63 @@ const UploadPrescription = () => {
                 <select
                   name="state"
                   value={formData.state}
-                  onChange={handleStateChange}
+                  onChange={(e) => {
+                    const selectedStateCode = e.target.value;
+                    setFormData({
+                      ...formData,
+                      state: selectedStateCode,
+                      district: "",
+                    });
+                    setSelectedState(Number(selectedStateCode));
+                  }}
                   required
                 >
                   <option value="">Select State</option>
-                  {states.map((state: string, idx: number) => (
-                    <option key={idx} value={state}>
-                      {state}
+                  {states.map((state) => (
+                    <option key={state.Id} value={state.Id}>
+                      {state.Name}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  name="district"
+                  value={formData.district}
+                  onChange={(e) => {
+                    const selectedDistrictName = e.target.value;
+                    setFormData({
+                      ...formData,
+                      district: selectedDistrictName,
+                    });
+                    // if you don’t have district Id, you can't fetch hospitals by Id
+                    // so you might want to pass district name or find its Id from elsewhere
+                    setSelectedDistrict(Number(selectedDistrictName));
+                  }}
+                  required
+                >
+                  <option value="">Select District</option>
+                  {districts.map((district, index) => (
+                    <option key={index} value={district.Id}>
+                      {district.Name}
                     </option>
                   ))}
                 </select>
 
                 <select
-                  name="district"
-                  value={formData.district}
-                  onChange={handleChange}
+                  name="hospital"
+                  value={formData.hospital}
+                  onChange={(e) =>
+                    setFormData({ ...formData, hospital: e.target.value })
+                  }
                   required
                 >
-                  <option value="">Select District</option>
-                  {districts.map((district: string, idx: number) => (
-                    <option key={idx} value={district}>
-                      {district}
+                  <option value="">Select Hospital</option>
+                  {hospitals.map((hospital, index) => (
+                    <option key={index} value={hospital.Name}>
+                      {hospital.Name}
                     </option>
                   ))}
                 </select>
 
-                <input
-                  type="text"
-                  name="hospital"
-                  value={formData.hospital}
-                  onChange={handleChange}
-                  placeholder="Hospital Name*"
-                  required
-                />
                 <input
                   type="text"
                   name="doctor"
@@ -194,24 +393,24 @@ const UploadPrescription = () => {
                   onChange={handleChange}
                 >
                   <option value="">Select Doctor Type</option>
-                  <option value="Rites_consultant">RITES Consultant</option>
-                  <option value="md_ms_mds">MD/MS/MDS</option>
-                  <option value="mbbs_bams">MBBS/BAMS/BDS</option>
-                  <option value="other">Other</option>
+                  {doctorTypes.map((doctorType) => (
+                    <option key={doctorType.Id} value={doctorType.Id}>
+                      {doctorType.Name}
+                    </option>
+                  ))}
                 </select>
+
                 <select
                   name="disease"
                   value={formData.disease}
                   onChange={handleChange}
                 >
                   <option value="">Select Disease</option>
-                  <option value="cancer">Cancer</option>
-                  <option value="covid">COVID</option>
-                  <option value="kidney_failure">Kidney Failure</option>
-                  <option value="heart_attack">Heart Attack</option>
-                  <option value="hiv">HIV</option>
-                  <option value="general">General</option>
-                  <option value="other">Other</option>
+                  {diseases.map((disease, index) => (
+                    <option key={index} value={disease}>
+                      {disease}
+                    </option>
+                  ))}
                 </select>
               </div>
             </fieldset>

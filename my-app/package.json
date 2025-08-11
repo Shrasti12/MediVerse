@@ -9,7 +9,6 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "proxy": "http://localhost:60266"
-
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
@@ -20,7 +19,8 @@
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.3",
-    "react-select": "^5.10.2"
+    "react-select": "^5.10.2",
+    "recharts": "^3.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
@@ -39,6 +39,4 @@
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.3"
   }
-
-  
 }
