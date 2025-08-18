@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./sideBar";
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
 
-const Layout: React.FC = () => {
+const Layout: React.FC<PageProps> = () => {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {

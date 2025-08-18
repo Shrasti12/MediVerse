@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import "./UploadPrescription.css";
 
 // import Sidebar from "../components/sideBar";
-
-const Approve: React.FC = () => {
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
+const Approve: React.FC<PageProps> = ({ empno }) => {
   const [formData, setFormData] = useState({
-    employeeNo: "",
+    employeeNo: empno || "", // you can initialize with empno
     amountClaimed: "",
   });
 

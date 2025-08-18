@@ -4,8 +4,11 @@ import { useState } from 'react';
 // import Sidebar from "../components/sideBar";
 
 import { useNavigate } from "react-router-dom";
-
-function ReImburseReport() {
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
+const ReImburseReport: React.FC<PageProps> = ({  }) => {
   const navigate = useNavigate(); // ✅ Hook to navigate
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

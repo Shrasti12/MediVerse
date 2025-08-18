@@ -14,33 +14,37 @@ import UpdateDependent from '../pages/UpdateDependent';
 import Login from '../pages/Login';
 import Signup from '../pages/signup';
 import Layout from '../components/layout';
+interface AppRoutesProps {
+  empno: string | null;
+  employeeData: any;
+}
 
-const AppRoutes = () => {
+
+const AppRoutes: React.FC<AppRoutesProps> = ({ empno, employeeData }) => {
   return (
     <Routes>
       {/* Public routes */}
-     
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      
 
       {/* Internal routes with Sidebar */}
-      <Route element={<Layout />}>
-       <Route path="/" element={<Home />} />   
-        <Route path="/upload" element={<UploadPrescription />} />
-        <Route path="/reimbursement/with" element={<ReimbursementWithPrescription />} />
-        <Route path="/reimbursement/without" element={<ReimbursementWithoutPrescription />} />
-        <Route path="/approve" element={<Approve />} />
-        <Route path="/dependent" element={<Dependent />} />
-        <Route path="/PresStatus" element={<PresStatus />} />
-        <Route path="/ReimburseStatus" element={<ReimburseStatus />} />
-        <Route path="/ReimburseReport" element={<ReImburseReport />} />
-        <Route path="/HospitalList" element={<HospitalList />} />
-        <Route path="/reimburs/report/nopres" element={<ReportWithoutPres />} />
-        <Route path="/update/dependent" element={<UpdateDependent />} />
+      <Route element={<Layout empno={empno} employeeData={employeeData} />}>
+        <Route path="/" element={<Home empno={empno} employeeData={employeeData} />} />   
+        <Route path="/upload" element={<UploadPrescription empno={empno} employeeData={employeeData} />} />
+        <Route path="/reimbursement/with" element={<ReimbursementWithPrescription empno={empno} employeeData={employeeData} />} />
+        <Route path="/reimbursement/without" element={<ReimbursementWithoutPrescription empno={empno} employeeData={employeeData} />} />
+        <Route path="/approve" element={<Approve empno={empno} employeeData={employeeData} />} />
+        <Route path="/dependent" element={<Dependent empno={empno} employeeData={employeeData} />} />
+        <Route path="/PresStatus" element={<PresStatus empno={empno} employeeData={employeeData} />} />
+        <Route path="/ReimburseStatus" element={<ReimburseStatus empno={empno} employeeData={employeeData} />} />
+        <Route path="/ReimburseReport" element={<ReImburseReport empno={empno} employeeData={employeeData} />} />
+        <Route path="/HospitalList" element={<HospitalList empno={empno} employeeData={employeeData} />} />
+        <Route path="/reimburs/report/nopres" element={<ReportWithoutPres empno={empno} employeeData={employeeData} />} />
+        <Route path="/update/dependent" element={<UpdateDependent empno={empno} employeeData={employeeData} />} />
       </Route>
     </Routes>
   );
 };
+
 
 export default AppRoutes;

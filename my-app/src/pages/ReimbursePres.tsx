@@ -15,10 +15,14 @@ interface ReimburseData {
   disease: string;
   declarationAccepted: boolean;
 }
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
 
-const ReimburseWithPrescription = () => {
+const ReimburseWithPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
   const initialState: ReimburseData = {
-    empName: "",
+     empName: empno ? employeeData?.Name || "" : "",
     financialYear: "",
     prescriptionNo: "",
     slNo: "0",

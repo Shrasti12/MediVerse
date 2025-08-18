@@ -15,9 +15,14 @@ interface ReimburseFormData {
   declaration: boolean;
 }
 
-const ReimbursementWithoutPrescription = () => {
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
+
+const ReimbursementWithoutPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
   const initialState: ReimburseFormData = {
-    empName: "",
+     empName: empno ? employeeData?.Name || "" : "",
     financialYear: "",
     reimbursementType: "",
     eligibleAmount: "",
@@ -68,25 +73,7 @@ const ReimbursementWithoutPrescription = () => {
 
   return (
     <div className="upload-page">
-      {/* <aside className="sidebar">
-        <h2 className="sidebar-title">MediVerse</h2>
-        <nav className="sidebar-nav">
-           <Link to="/" className="nav-item">
-                                 Home
-                              </Link>
-          
-          <button className="nav-item active">
-            <i className="fa fa-plus-circle"></i> New Claim
-          </button>
-          <button className="nav-item">
-            <i className="fa fa-check-circle"></i> Track Status
-          </button>
-          <button className="nav-item">
-            <i className="fa fa-cog"></i> Settings
-          </button>
-        </nav>
-      </aside> */}
-      {/* <Sidebar/> */}
+   
 
       
 

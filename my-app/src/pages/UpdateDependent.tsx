@@ -11,10 +11,14 @@ interface DependentFormData {
   attachment: File | null;
   reason: string;
 }
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
 
-const UpdateDependent = () => {
+const UpdateDependent: React.FC<PageProps> = ({empno, employeeData}) => {
   const initialState: DependentFormData = {
-    dependentName: "",
+    dependentName: empno ? employeeData?.Name || "" : "",
     gender: "",
     dob: "",
     relation: "self",

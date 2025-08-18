@@ -2,9 +2,14 @@ import './UploadPrescription.css';
 import { useState } from 'react';
 // import Sidebar from "../components/sideBar";
 
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
+
 import {useNavigate } from "react-router-dom";
 
-function ReimburseStatus() {
+const ReimburseStatus: React.FC<PageProps> = ({  }) => {
   const navigate = useNavigate(); // ✅ Hook to navigate
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

@@ -15,10 +15,14 @@ interface FormData {
   date: string;
   prescriptionFile: File | null;
 }
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
 
-const UploadPrescription = () => {
+const UploadPrescription:React.FC<PageProps> = ({empno, employeeData}) => {
   const initialState: FormData = {
-    empName: "",
+    empName: empno ? employeeData?.Name || "" : "",
     relation: "",
     state: "",
     district: "",
@@ -30,6 +34,23 @@ const UploadPrescription = () => {
     date: "",
     prescriptionFile: null,
   };
+  useEffect(() => {
+  if (employeeData) {
+    setFormData({
+      empName: employeeData.Name || "",
+      relation: employeeData.Relation || "",
+      state: employeeData.State || "",
+      district: employeeData.District || "",
+      hospital: employeeData.Hospital || "",
+      doctor: employeeData.Doctor || "",
+      doctorType: employeeData.DoctorType || "",
+      disease: employeeData.Disease || "",
+      receiptNo: "",
+      date: "",
+      prescriptionFile: null,
+    });
+  }
+}, [employeeData]);
 
   const [states, setStates] = useState<State[]>([]);
   const [formData, setFormData] = useState<FormData>(initialState);

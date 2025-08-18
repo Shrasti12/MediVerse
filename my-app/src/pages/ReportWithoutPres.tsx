@@ -4,9 +4,12 @@ import { useNavigate } from 'react-router-dom';
 // import Sidebar from "../components/sideBar";
 import './UploadPrescription.css'; 
 import { useState } from 'react';
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
 
-
-function ReportWithoutPres() {
+const ReportWithoutPres: React.FC<PageProps>= ({ }) => {
   const navigate = useNavigate(); // ✅ Hook to navigate
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

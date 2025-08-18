@@ -3,8 +3,11 @@ import { City, State } from "country-state-city";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import Sidebar from "../components/sideBar";
-
-function HospitalList() {
+interface PageProps {
+  empno: string | null;
+  employeeData: any;
+}
+const HospitalList: React.FC<PageProps> = ({  }) => {
   const navigate = useNavigate();
 
   const [selectedState, setSelectedState] = useState<any>(null);
