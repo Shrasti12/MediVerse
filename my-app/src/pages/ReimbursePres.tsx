@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./UploadPrescription.css";
-
-// import Sidebar from "../components/sideBar";
+import axios from "axios";
 
 interface ReimburseData {
   empName: string;
@@ -32,9 +31,6 @@ const ReimburseWithPrescription = () => {
     declarationAccepted: false,
   };
 
-  const [formData, setFormData] = useState<ReimburseData>(initialState);
-  // const [setSubmitted] = useState<ReimburseData[]>([]);
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -52,7 +48,7 @@ const ReimburseWithPrescription = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.declarationAccepted) {
-      // setSubmitted((prev) => [...prev, formData]);
+      // Submit your form logic here
       setFormData(initialState);
     } else {
       alert("Please accept the declaration before submitting.");
@@ -61,30 +57,117 @@ const ReimburseWithPrescription = () => {
 
   const handleClear = () => {
     setFormData(initialState);
+    setEmployeeNames([]);
+    setSearchTerm("");
   };
+  const [formData, setFormData] = useState<ReimburseData>(initialState);
+  const [diseases, setDiseases] = useState<string[]>([]);
+  const [employeeNames, setEmployeeNames] = useState<Employee[]>([]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Fetch diseases once on component mount
+  useEffect(() => {
+    const fetchDiseases = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/StateService.asmx/GetDiseases",
+          { headers: { "Content-Type": "application/json" } }
+        );
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.d;
+        if (Array.isArray(data)) {
+          setDiseases(data);
+        } else {
+          console.error("Unexpected response format:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching diseases:", error);
+      }
+    };
+
+    fetchDiseases();
+  }, []);
+
+  interface Employee {
+    Id: number;
+    Name: string;
+  }
+  // Fetch employee names with debounce on searchTerm change
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setEmployeeNames([]);
+      return;
+    }
+
+    const fetchEmployeeNames = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/StateService.asmx/GetEmployeeNames",
+          {
+            params: { prefix: searchTerm },
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        const data = response.data?.d || response.data;
+        if (Array.isArray(data)) {
+          setEmployeeNames(data);
+        } else {
+          setEmployeeNames([]);
+        }
+      } catch (error) {
+        console.error("Error fetching employee names:", error);
+      }
+    };
+
+    const debounceId = setTimeout(fetchEmployeeNames, 300);
+    return () => clearTimeout(debounceId);
+  }, [searchTerm]);
+
+
+  const [selectedEmpId, setSelectedEmpId] = useState<number | null>(null);
+
+    // const [, setError] = useState<string | null>(null);
+
+    // Auto-fetch eligible amount when empName changes
+useEffect(() => {
+  const selectedEmployee = employeeNames.find(emp => emp.Name === formData.empName);
+  if (!selectedEmployee) {
+    setFormData(prev => ({ ...prev, totalEligibility: "" }));
+    return;
+  }
+
+  const fetchEligibleAmount = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:60266/WS/StateService.asmx/GetEligibleAmount",
+        {
+          params: { EmpNo: selectedEmployee.Id },
+          headers: { "Content-Type": "application/json; charset=utf-8" },
+        }
+      );
+
+      let amount = 0;
+      if (response.data && typeof response.data.d === "number") {
+        amount = response.data.d;
+      } else if (response.data && typeof response.data.d === "string") {
+        amount = parseFloat(response.data.d);
+      }
+
+      setFormData(prev => ({ ...prev, totalEligibility: amount.toString() }));
+    } catch (error) {
+      console.error("Failed to fetch eligible amount", error);
+      setFormData(prev => ({ ...prev, totalEligibility: "" }));
+    }
+  };
+
+  fetchEligibleAmount();
+}, [formData.empName, employeeNames]);
+
 
   return (
     <div className="upload-page">
-      {/* <aside className="sidebar">
-        <h2 className="sidebar-title">MediVerse</h2>
-        <nav className="sidebar-nav">
-          <Link to="/" className="nav-item">
-                       Home
-                    </Link>
-
-          <button className="nav-item active">
-            <i className="fa fa-plus-circle"></i> New Claim
-          </button>
-          <button className="nav-item">
-            <i className="fa fa-check-circle"></i> Track Status
-          </button>
-          <button className="nav-item">
-            <i className="fa fa-cog"></i> Settings
-          </button>
-        </nav>
-      </aside> */}
-      {/* <Sidebar/> */}
-
       <main className="upload-container">
         <form className="form-section" onSubmit={handleSubmit}>
           <h1 className="heading">Reimbursement with Prescription</h1>
@@ -95,17 +178,56 @@ const ReimburseWithPrescription = () => {
 
           <fieldset>
             <legend>Employee Details</legend>
-            <div className="grid-2">
+            <div className="grid-2" style={{ position: "relative" }}>
               <input
                 type="text"
                 name="empName"
                 value={formData.empName}
-                onChange={handleChange}
-                placeholder="Employee Name*"
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, empName: e.target.value }));
+                  setSearchTerm(e.target.value);
+                }}
+                placeholder="Search Employee Name*"
+                autoComplete="off"
                 required
               />
+              {/* {employeeNames.length > 0 && (
+                <ul
+                  className="dropdown-list"
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    right: 0,
+                    background: "white",
+                    border: "1px solid #ccc",
+                    maxHeight: "150px",
+                    overflowY: "auto",
+                    zIndex: 1000,
+                    margin: 0,
+                    padding: 0,
+                    listStyle: "none",
+                  }}
+                >
+                  {employeeNames.map((Employee, index) => (
+                    <li
+                      key={`${Employee.Id}-${index}`}
+                      style={{ padding: "8px", cursor: "pointer" }}
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          empName: Employee.Name,
+                        }));
+                        setEmployeeNames([]);
+                        setSearchTerm(Employee.Name);
+                      }}
+                    >
+                      {Employee.Name}
+                    </li>
+                  ))}
+                </ul>
+              )} */}
 
-              {/* Financial Year Dropdown */}
               <select
                 name="financialYear"
                 value={formData.financialYear}
@@ -124,17 +246,6 @@ const ReimburseWithPrescription = () => {
                   );
                 })}
               </select>
-
-              <input
-                type="text"
-                name="prescriptionNo"
-                value={formData.prescriptionNo}
-                onChange={handleChange}
-                placeholder="Prescription Sl. No*"
-                required
-              />
-
-              <input type="text" name="slNo" value={formData.slNo} readOnly />
             </div>
           </fieldset>
 
@@ -145,10 +256,10 @@ const ReimburseWithPrescription = () => {
                 type="text"
                 name="totalEligibility"
                 value={formData.totalEligibility}
-                onChange={handleChange}
                 placeholder="Total Eligibility Amount*"
-                required
+                readOnly
               />
+
               <input
                 type="text"
                 name="previousBalance"
@@ -191,18 +302,13 @@ const ReimburseWithPrescription = () => {
                 name="disease"
                 value={formData.disease}
                 onChange={handleChange}
-                required
               >
-                <option value="" disabled>
-                  Select Disease
-                </option>
-                <option value="cancer">Cancer</option>
-                <option value="covid">COVID</option>
-                <option value="kidney_failure">Kidney Failure</option>
-                <option value="heart_attack">Heart Attack</option>
-                <option value="hiv">HIV</option>
-                <option value="general">General</option>
-                <option value="other">Other</option>
+                <option value="">Select Disease</option>
+                {diseases.map((disease, index) => (
+                  <option key={index} value={disease}>
+                    {disease}
+                  </option>
+                ))}
               </select>
             </div>
           </fieldset>
@@ -236,7 +342,7 @@ const ReimburseWithPrescription = () => {
               Modify
             </button>
             <button type="submit" className="submit-btn-U">
-              Print Preview{" "}
+              Print Preview
             </button>
             <button type="submit" className="submit-btn-U">
               Back
@@ -245,43 +351,11 @@ const ReimburseWithPrescription = () => {
               Clear
             </button>
           </div>
-        </form>
 
-        {/* {submitted.length > 0 && (
-          <div className="data-table">
-            <h2>Submitted Reimbursements</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Employee</th>
-                  <th>Year</th>
-                  <th>Prescription No</th>
-                  <th>Total Eligibility</th>
-                  <th>Previous Bal</th>
-                  <th>Claimed</th>
-                  <th>Balance</th>
-                  <th>Claiming</th>
-                  <th>Disease</th>
-                </tr>
-              </thead>
-              <tbody>
-                {submitted.map((data, index) => (
-                  <tr key={index}>
-                    <td>{data.empName}</td>
-                    <td>{data.financialYear}</td>
-                    <td>{data.prescriptionNo}</td>
-                    <td>{data.totalEligibility}</td>
-                    <td>{data.previousBalance}</td>
-                    <td>{data.amountClaimed}</td>
-                    <td>{data.balanceAmount}</td>
-                    <td>{data.amountBeingClaimed}</td>
-                    <td>{data.disease}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid-3">
+            
           </div>
-        )} */}
+        </form>
       </main>
     </div>
   );

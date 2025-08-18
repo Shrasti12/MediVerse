@@ -1,6 +1,4 @@
 @import "tailwindcss";
-
-/* === Layout === */
 .upload-page {
   display: flex;
   min-height: 100vh;
