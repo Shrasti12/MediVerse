@@ -3,14 +3,13 @@ import "./UploadPrescription.css";
 import axios from "axios";
 
 interface ReimburseData {
-  empName: string;
+  EmpName: string;
   financialYear: string;
   prescriptionNo: string;
   slNo: string;
   totalEligibility: string;
   previousBalance: string;
   amountClaimed: string;
-  balanceAmount: string;
   amountBeingClaimed: string;
   disease: string;
   declarationAccepted: boolean;
@@ -20,20 +19,28 @@ interface PageProps {
   employeeData: any;
 }
 
-const ReimburseWithPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
+const ReimburseWithPrescription: React.FC<PageProps> = ({
+  empno,
+  employeeData,
+}) => {
   const initialState: ReimburseData = {
-     empName: empno ? employeeData?.Name || "" : "",
+    EmpName: empno ? employeeData?.EmpName || "" : "",
     financialYear: "",
     prescriptionNo: "",
     slNo: "0",
-    totalEligibility: "",
-    previousBalance: "",
-    amountClaimed: "",
-    balanceAmount: "",
+    totalEligibility: employeeData?.AmtEligible,
+    previousBalance: employeeData?.AmtBalance,
+    amountClaimed: employeeData?.AmtApproved,
     amountBeingClaimed: "",
     disease: "",
     declarationAccepted: false,
   };
+
+  const [formData, setFormData] = useState<ReimburseData>(initialState);
+  const [diseases, setDiseases] = useState<string[]>([]);
+  const [, setEmployeeNames] = useState<Employee[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [financialYear, setFinancialYear] = useState<string[]>([]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -52,7 +59,7 @@ const ReimburseWithPrescription: React.FC<PageProps> = ({ empno, employeeData })
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.declarationAccepted) {
-      // Submit your form logic here
+      // Submit logic
       setFormData(initialState);
     } else {
       alert("Please accept the declaration before submitting.");
@@ -64,13 +71,13 @@ const ReimburseWithPrescription: React.FC<PageProps> = ({ empno, employeeData })
     setEmployeeNames([]);
     setSearchTerm("");
   };
-  const [formData, setFormData] = useState<ReimburseData>(initialState);
-  const [diseases, setDiseases] = useState<string[]>([]);
-  const [employeeNames, setEmployeeNames] = useState<Employee[]>([]);
 
-  const [searchTerm, setSearchTerm] = useState("");
+  interface Employee {
+    Id: number;
+    Name: string;
+  }
 
-  // Fetch diseases once on component mount
+  // ✅ Merged useEffect for fetching diseases + employee names
   useEffect(() => {
     const fetchDiseases = async () => {
       try {
@@ -91,21 +98,30 @@ const ReimburseWithPrescription: React.FC<PageProps> = ({ empno, employeeData })
       }
     };
 
-    fetchDiseases();
-  }, []);
-
-  interface Employee {
-    Id: number;
-    Name: string;
-  }
-  // Fetch employee names with debounce on searchTerm change
-  useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setEmployeeNames([]);
-      return;
-    }
+    const fetchFinYear = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/StateService.asmx/GetFinYear",
+          { headers: { "Content-Type": "application/json" } }
+        );
+        if (Array.isArray(response.data)) {
+          setFinancialYear(response.data);
+        } else if (response.data.d && Array.isArray(response.data.d)) {
+          setFinancialYear(response.data.d);
+        } else {
+          setFinancialYear([]);
+        }
+      } catch (error) {
+        console.error("Error fetching doctor types:", error);
+        setFinancialYear([]);
+      }
+    };
 
     const fetchEmployeeNames = async () => {
+      if (searchTerm.trim() === "") {
+        setEmployeeNames([]);
+        return;
+      }
       try {
         const response = await axios.get(
           "http://localhost:60266/WS/StateService.asmx/GetEmployeeNames",
@@ -125,49 +141,19 @@ const ReimburseWithPrescription: React.FC<PageProps> = ({ empno, employeeData })
       }
     };
 
-    const debounceId = setTimeout(fetchEmployeeNames, 300);
-    return () => clearTimeout(debounceId);
-  }, [searchTerm]);
+    // Run once on mount → diseases
+    fetchDiseases();
+    // fetchFinYear();
 
-
-  const [selectedEmpId, setSelectedEmpId] = useState<number | null>(null);
-
-    // const [, setError] = useState<string | null>(null);
-
-    // Auto-fetch eligible amount when empName changes
-useEffect(() => {
-  const selectedEmployee = employeeNames.find(emp => emp.Name === formData.empName);
-  if (!selectedEmployee) {
-    setFormData(prev => ({ ...prev, totalEligibility: "" }));
-    return;
-  }
-
-  const fetchEligibleAmount = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:60266/WS/StateService.asmx/GetEligibleAmount",
-        {
-          params: { EmpNo: selectedEmployee.Id },
-          headers: { "Content-Type": "application/json; charset=utf-8" },
-        }
-      );
-
-      let amount = 0;
-      if (response.data && typeof response.data.d === "number") {
-        amount = response.data.d;
-      } else if (response.data && typeof response.data.d === "string") {
-        amount = parseFloat(response.data.d);
-      }
-
-      setFormData(prev => ({ ...prev, totalEligibility: amount.toString() }));
-    } catch (error) {
-      console.error("Failed to fetch eligible amount", error);
-      setFormData(prev => ({ ...prev, totalEligibility: "" }));
+    // Run whenever searchTerm changes → debounce employee search
+    if (searchTerm.trim() !== "") {
+      const debounceId = setTimeout(fetchEmployeeNames, 300);
+      return () => clearTimeout(debounceId);
+    } else {
+      setEmployeeNames([]);
     }
-  };
-
-  fetchEligibleAmount();
-}, [formData.empName, employeeNames]);
+  }, [searchTerm]);
+  // run only once on mount
 
 
   return (
@@ -186,69 +172,22 @@ useEffect(() => {
               <input
                 type="text"
                 name="empName"
-                value={formData.empName}
-                onChange={(e) => {
-                  setFormData((prev) => ({ ...prev, empName: e.target.value }));
-                  setSearchTerm(e.target.value);
-                }}
+                value={initialState.EmpName}
                 placeholder="Search Employee Name*"
                 autoComplete="off"
                 required
               />
-              {/* {employeeNames.length > 0 && (
-                <ul
-                  className="dropdown-list"
-                  style={{
-                    position: "absolute",
-                    top: "100%",
-                    left: 0,
-                    right: 0,
-                    background: "white",
-                    border: "1px solid #ccc",
-                    maxHeight: "150px",
-                    overflowY: "auto",
-                    zIndex: 1000,
-                    margin: 0,
-                    padding: 0,
-                    listStyle: "none",
-                  }}
-                >
-                  {employeeNames.map((Employee, index) => (
-                    <li
-                      key={`${Employee.Id}-${index}`}
-                      style={{ padding: "8px", cursor: "pointer" }}
-                      onClick={() => {
-                        setFormData((prev) => ({
-                          ...prev,
-                          empName: Employee.Name,
-                        }));
-                        setEmployeeNames([]);
-                        setSearchTerm(Employee.Name);
-                      }}
-                    >
-                      {Employee.Name}
-                    </li>
-                  ))}
-                </ul>
-              )} */}
-
               <select
                 name="financialYear"
-                value={formData.financialYear}
+                value={formData.financialYear} 
                 onChange={handleChange}
-                required
               >
-                <option value="" disabled>
-                  Select Financial Year*
-                </option>
-                {Array.from({ length: 5 }, (_, i) => {
-                  const year = new Date().getFullYear() - i;
-                  return (
-                    <option key={year} value={`${year}-${year + 1}`}>
-                      {year}-{year + 1}
-                    </option>
-                  );
-                })}
+                <option value="">Select Financial Year</option>
+                {financialYear.map((financialYear, index) => (
+                  <option key={index} value={financialYear}>
+                    {financialYear}
+                  </option>
+                ))}
               </select>
             </div>
           </fieldset>
@@ -256,46 +195,49 @@ useEffect(() => {
           <fieldset>
             <legend>Claim Details</legend>
             <div className="grid-2">
-              <input
-                type="text"
-                name="totalEligibility"
-                value={formData.totalEligibility}
-                placeholder="Total Eligibility Amount*"
-                readOnly
-              />
+              <div className="form-group">
+                <label htmlFor="totalEligibility">Total Eligibility</label>
+                <input
+                  type="text"
+                  id="totalEligibility"
+                  name="totalEligibility"
+                  value={formData.totalEligibility}
+                  onChange={handleChange}
+                />
+              </div>
 
-              <input
-                type="text"
-                name="previousBalance"
-                value={formData.previousBalance}
-                onChange={handleChange}
-                placeholder="Previous Balance*"
-                required
-              />
-              <input
-                type="text"
-                name="amountClaimed"
-                value={formData.amountClaimed}
-                onChange={handleChange}
-                placeholder="Amount Claimed up to now*"
-                required
-              />
-              <input
-                type="text"
-                name="balanceAmount"
-                value={formData.balanceAmount}
-                onChange={handleChange}
-                placeholder="Balance Amount*"
-                required
-              />
-              <input
-                type="text"
-                name="amountBeingClaimed"
-                value={formData.amountBeingClaimed}
-                onChange={handleChange}
-                placeholder="Amount Being Claimed*"
-                required
-              />
+              <div className="form-group">
+                <label htmlFor="previousBalance">Previous Balance</label>
+                <input
+                  type="text"
+                  id="previousBalance"
+                  name="previousBalance"
+                  value={formData.previousBalance}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="amountClaimed">Amount Claimed upto now</label>
+                <input
+                  type="text"
+                  id="amountClaimed"
+                  name="amountClaimed"
+                  value={formData.amountClaimed}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="amountBeingClaimed">Amount Being Claimed</label>
+                <input
+                  type="text"
+                  id="amountBeingClaimed"
+                  name="amountBeingClaimed"
+                  value={formData.amountBeingClaimed}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
           </fieldset>
 
@@ -354,10 +296,6 @@ useEffect(() => {
             <button type="reset" className="submit-btn-U" onClick={handleClear}>
               Clear
             </button>
-          </div>
-
-          <div className="grid-3">
-            
           </div>
         </form>
       </main>

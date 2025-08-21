@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./UploadPrescription.css";
 import Sidebar from "../components/sideBar";
+
 interface FormData {
   empName: string;
   relation: string;
@@ -15,14 +16,15 @@ interface FormData {
   date: string;
   prescriptionFile: File | null;
 }
+
 interface PageProps {
   empno: string | null;
   employeeData: any;
 }
 
-const UploadPrescription:React.FC<PageProps> = ({empno, employeeData}) => {
+const UploadPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
   const initialState: FormData = {
-    empName: empno ? employeeData?.Name || "" : "",
+    empName: empno ? employeeData?.EmpName || "" : "",
     relation: "",
     state: "",
     district: "",
@@ -34,108 +36,153 @@ const UploadPrescription:React.FC<PageProps> = ({empno, employeeData}) => {
     date: "",
     prescriptionFile: null,
   };
-  useEffect(() => {
-  if (employeeData) {
-    setFormData({
-      empName: employeeData.Name || "",
-      relation: employeeData.Relation || "",
-      state: employeeData.State || "",
-      district: employeeData.District || "",
-      hospital: employeeData.Hospital || "",
-      doctor: employeeData.Doctor || "",
-      doctorType: employeeData.DoctorType || "",
-      disease: employeeData.Disease || "",
-      receiptNo: "",
-      date: "",
-      prescriptionFile: null,
-    });
-  }
-}, [employeeData]);
 
   const [states, setStates] = useState<State[]>([]);
   const [formData, setFormData] = useState<FormData>(initialState);
   const [submittedData, setSubmittedData] = useState<FormData[]>([]);
-  // const [states, setStates] = useState<any[]>([]);
+  const [selectedState, setSelectedState] = useState<number | null>(null);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [diseases, setDiseases] = useState<string[]>([]);
+  const [doctorTypes, setDoctorTypes] = useState<DoctorType[]>([]);
 
   interface State {
     Id: number;
     Name: string;
   }
+  interface District {
+    Id: number;
+    Name: string;
+  }
+  interface Hospital {
+    Id: number;
+    Name: string;
+  }
+  interface DoctorType {
+    Id: number;
+    Name: string;
+  }
 
   useEffect(() => {
+    // 1. Handle employeeData change
+    if (employeeData) {
+      setFormData({
+        empName: employeeData.Name || "",
+        relation: employeeData.Relation || "",
+        state: employeeData.State || "",
+        district: employeeData.District || "",
+        hospital: employeeData.Hospital || "",
+        doctor: employeeData.Doctor || "",
+        doctorType: employeeData.DoctorType || "",
+        disease: employeeData.Disease || "",
+        receiptNo: "",
+        date: "",
+        prescriptionFile: null,
+      });
+    }
+
+    // 2. Fetch states
     const fetchStates = async () => {
       try {
         const response = await axios.get(
           "http://localhost:60266/WS/StateService.asmx/GetStates?x=test",
-          {
-            headers: { "Content-Type": "application/json" },
-          }
+          { headers: { "Content-Type": "application/json" } }
         );
-
         const data = Array.isArray(response.data)
           ? response.data
           : response.data?.d;
-
-        if (Array.isArray(data)) {
-          setStates(data);
-        } else {
-          console.error("Unexpected states data format:", data);
-          setStates([]);
-        }
+        setStates(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error loading states:", error);
         setStates([]);
       }
     };
-   
 
-    fetchStates();
-  }, []);
-
-  const [selectedState, setSelectedState] = useState<number | null>(null);
-
-  const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const stateId = parseInt(event.target.value);
-    setSelectedState(stateId);
-  };
-  interface District {
-    Id: number;
-    Name: string;
-  }
-  const [districts, setDistricts] = useState<District[]>([]);
-  useEffect(() => {
+    // 3. Fetch districts (depends on selectedState)
     const fetchDistricts = async () => {
       if (!selectedState) return;
-
       try {
         const response = await axios.get(
           `http://localhost:60266/WS/StateService.asmx/GetDistricts?stateCode=${selectedState}`,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
+          { headers: { "Content-Type": "application/json" } }
         );
-
         const data = Array.isArray(response.data)
           ? response.data
           : response.data?.d;
-
-        if (Array.isArray(data)) {
-          setDistricts(data);
-        } else {
-          console.error("Unexpected districts data format:", data);
-          setDistricts([]);
-        }
+        setDistricts(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching districts:", error);
         setDistricts([]);
       }
     };
 
-    fetchDistricts();
-  }, [selectedState]);
+    // 4. Fetch hospitals (depends on selectedDistrict & selectedState)
+    const fetchHospitals = async () => {
+      if (!selectedDistrict || !selectedState) return;
+      try {
+        const response = await axios.get(
+          `http://localhost:60266/WS/StateService.asmx/GetHospitals?districtCode=${selectedDistrict}&stateCode=${selectedState}`,
+          { headers: { "Content-Type": "application/json" } }
+        );
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.d;
+        setHospitals(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error fetching hospitals:", error);
+        setHospitals([]);
+      }
+    };
 
-  // const [hospitals, setHospitals] = useState<string[]>([]);
-  const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
+    // 5. Fetch diseases
+    const fetchDiseases = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/StateService.asmx/GetDiseases",
+          { headers: { "Content-Type": "application/json" } }
+        );
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.d;
+        if (Array.isArray(data)) setDiseases(data);
+      } catch (error) {
+        console.error("Error fetching diseases:", error);
+      }
+    };
+
+    // 6. Fetch doctor types
+    const fetchDoctorTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/StateService.asmx/GetDoctorTypes",
+          { headers: { Accept: "application/json" } }
+        );
+        if (Array.isArray(response.data)) {
+          setDoctorTypes(response.data);
+        } else if (response.data.d && Array.isArray(response.data.d)) {
+          setDoctorTypes(response.data.d);
+        } else {
+          setDoctorTypes([]);
+        }
+      } catch (error) {
+        console.error("Error fetching doctor types:", error);
+        setDoctorTypes([]);
+      }
+    };
+
+    // Call functions
+    fetchStates();
+    fetchDiseases();
+    fetchDoctorTypes();
+    fetchDistricts();
+    fetchHospitals();
+  }, [employeeData, selectedState, selectedDistrict]);
+
+  const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const stateId = parseInt(event.target.value);
+    setSelectedState(stateId);
+  };
 
   const handleDistrictChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -143,103 +190,6 @@ const UploadPrescription:React.FC<PageProps> = ({empno, employeeData}) => {
     const districtId = parseInt(event.target.value);
     setSelectedDistrict(districtId);
   };
-  interface Hospital {
-    Id: number;
-    Name: string;
-  }
-
-  const [hospitals, setHospitals] = useState<Hospital[]>([]);
-  useEffect(() => {
-    const fetchHospitals = async () => {
-      if (!selectedDistrict || !selectedDistrict) return;
-
-      try {
-        const response = await axios.get(
-          `http://localhost:60266/WS/StateService.asmx/GetHospitals?districtCode=${selectedDistrict}&stateCode=${selectedState}`,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-
-        const data = Array.isArray(response.data)
-          ? response.data
-          : response.data?.d;
-        //  console.log("Selected State:", selectedState, "Selected District:", selectedDistrict);
-
-        if (Array.isArray(data)) {
-          setHospitals(data);
-        } else {
-          console.error("Unexpected hospital data format:", data);
-          setHospitals([]);
-        }
-      } catch (error) {
-        console.error("Error fetching hospitals:", error);
-        setHospitals([]);
-      }
-    };
-
-    fetchHospitals();
-  }, [selectedDistrict]);
-
-  const [diseases, setDiseases] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchDiseases = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:60266/WS/StateService.asmx/GetDiseases",
-          { headers: { "Content-Type": "application/json" } }
-        );
-
-        // ASMX typically returns data inside 'd'
-        const data = Array.isArray(response.data)
-          ? response.data
-          : response.data?.d;
-
-        if (Array.isArray(data)) {
-          setDiseases(data);
-        } else {
-          console.error("Unexpected response format:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching diseases:", error);
-      }
-    };
-
-    fetchDiseases();
-  }, []);
-  interface DoctorType {
-    Id: number;
-    Name: string;
-  }
-
-  const [doctorTypes, setDoctorTypes] = useState<DoctorType[]>([]);
-  useEffect(() => {
-    const fetchDoctorTypes = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:60266/WS/StateService.asmx/GetDoctorTypes",
-          { headers: { Accept: "application/json" } }
-        );
-
-        // The actual data will be in response.data (or response.data.d if wrapped)
-        if (Array.isArray(response.data)) {
-          setDoctorTypes(response.data);
-        } else if (response.data.d && Array.isArray(response.data.d)) {
-          setDoctorTypes(response.data.d);
-        } else {
-          console.error("Unexpected doctor types format");
-          setDoctorTypes([]);
-        }
-        console.log("Doctor types response data:", response.data);
-      } catch (error) {
-        console.error("Error fetching doctor types:", error);
-        setDoctorTypes([]);
-      }
-    };
-
-    fetchDoctorTypes();
-  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -271,7 +221,7 @@ const UploadPrescription:React.FC<PageProps> = ({empno, employeeData}) => {
 
   const handleClear = () => setFormData(initialState);
   const handleBack = () => setSubmittedData((prev) => prev.slice(0, -1));
-  // console.log("Hospitals list:", hospitals);
+
   console.log("Selected hospital:", formData.hospital);
 
   return (
@@ -292,8 +242,6 @@ const UploadPrescription:React.FC<PageProps> = ({empno, employeeData}) => {
                   placeholder="Employee Name"
                   required
                 />
-                {/* <input type="text" placeholder="S.No" value="6" readOnly />
-                <input type="text" placeholder="Attempts" value="1" readOnly /> */}
                 <select
                   name="relation"
                   value={formData.relation}
@@ -344,8 +292,6 @@ const UploadPrescription:React.FC<PageProps> = ({empno, employeeData}) => {
                       ...formData,
                       district: selectedDistrictName,
                     });
-                    // if you don’t have district Id, you can't fetch hospitals by Id
-                    // so you might want to pass district name or find its Id from elsewhere
                     setSelectedDistrict(Number(selectedDistrictName));
                   }}
                   required
