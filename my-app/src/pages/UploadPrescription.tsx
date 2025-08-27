@@ -272,24 +272,7 @@ const UploadPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
                 autoComplete="off"
                 required
               />
-                <select
-                  name="relation"
-                  value= {formData.relation}
-                  onChange={handleChange}
-                  required
-                  
-                >
-                  <option  value={initialState.relation}>{initialState.relation}Select Relation
-
-
-                  </option>
-                  {Dependants.map((relation: any, index: number) => (
-    <option key={index} value={relation.value}>
-      {relation.label}
-    </option>
-  ))}
-                  
-                </select>
+               c
               </div>
             </fieldset>
 
