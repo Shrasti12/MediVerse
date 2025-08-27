@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./UploadPrescription.css";
-import Sidebar from "../components/sideBar";
+// import Sidebar from "../components/sideBar";
 
 interface FormData {
   empName: string;
@@ -21,11 +21,14 @@ interface PageProps {
   empno: string | null;
   employeeData: any;
 }
-
+interface Employee {
+    Id: number;
+    Name: string;
+  }
 const UploadPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
   const initialState: FormData = {
     empName: empno ? employeeData?.EmpName || "" : "",
-    relation: "",
+    relation:  "",
     state: "",
     district: "",
     hospital: "",
@@ -46,6 +49,15 @@ const UploadPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [diseases, setDiseases] = useState<string[]>([]);
   const [doctorTypes, setDoctorTypes] = useState<DoctorType[]>([]);
+  const [Dependants,setDependants]  = useState<dependant[]>([]);
+  //  const [, setEmployeeNames] = useState<Employee[]>([]);
+  //  const [searchTerm, setSearchTerm] = useState("");
+
+  interface dependant{
+    Id: number;
+    Name:string;
+  }
+
 
   interface State {
     Id: number;
@@ -170,6 +182,26 @@ const UploadPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
         setDoctorTypes([]);
       }
     };
+   // Get emp dependent name 
+
+   const fetchEmployeeDep = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/StateService.asmx/GetEmployeeDep",
+          
+          {
+             params: { empno }, 
+             headers: { "Content-Type": "application/json" } }
+        );
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.d;
+        if (Array.isArray(data)) setDependants(data);
+      } catch (error) {
+        console.error("Error fetching dependants:", error);
+      }
+    };
+    
 
     // Call functions
     fetchStates();
@@ -177,20 +209,18 @@ const UploadPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
     fetchDoctorTypes();
     fetchDistricts();
     fetchHospitals();
-  }, [employeeData, selectedState, selectedDistrict]);
+    fetchEmployeeDep();
+    //  if (searchTerm.trim() !== "") {
+    //   const debounceId = setTimeout(fetchEmployeeNames, 300);
+    //   return () => clearTimeout(debounceId);
+    // } else {
+    //   setEmployeeNames([]);
+    // }
 
-  const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const stateId = parseInt(event.target.value);
-    setSelectedState(stateId);
-  };
+    
+  }, [employeeData, selectedState, selectedDistrict,]);
 
-  const handleDistrictChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const districtId = parseInt(event.target.value);
-    setSelectedDistrict(districtId);
-  };
-
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -235,26 +265,30 @@ const UploadPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
               <legend>Employee Details</legend>
               <div className="grid-2">
                 <input
-                  type="text"
-                  name="empName"
-                  value={formData.empName}
-                  onChange={handleChange}
-                  placeholder="Employee Name"
-                  required
-                />
+                type="text"
+                name="empName"
+                value={initialState.empName}
+                placeholder="Search Employee Name*"
+                autoComplete="off"
+                required
+              />
                 <select
                   name="relation"
-                  value={formData.relation}
+                  value= {formData.relation}
                   onChange={handleChange}
                   required
+                  
                 >
-                  <option value="">Select Relation</option>
-                  <option value="self">Self</option>
-                  <option value="spouse">Spouse</option>
-                  <option value="father">Father</option>
-                  <option value="mother">Mother</option>
-                  <option value="child">Child</option>
-                  <option value="other">Other</option>
+                  <option  value={initialState.relation}>{initialState.relation}Select Relation
+
+
+                  </option>
+                  {Dependants.map((relation: any, index: number) => (
+    <option key={index} value={relation.value}>
+      {relation.label}
+    </option>
+  ))}
+                  
                 </select>
               </div>
             </fieldset>

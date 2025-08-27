@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import "./UploadPrescription.css";
-// import Sidebar from "../components/sideBar";
+import axios from "axios";
 
 interface ReimburseFormData {
   empName: string;
@@ -19,10 +18,21 @@ interface PageProps {
   empno: string | null;
   employeeData: any;
 }
+interface ReImbTypeModel {
+  Code: string;
+  Name: string;
+}
+interface MedicineEntry {
+  dependent: string;
+  receiptNo: string;
+  receiptDate: string;
+  claimAmount: string;
+  attachment: File | null;
+}
 
 const ReimbursementWithoutPrescription: React.FC<PageProps> = ({ empno, employeeData }) => {
   const initialState: ReimburseFormData = {
-     empName: empno ? employeeData?.Name || "" : "",
+    empName: empno ? employeeData?.EmpName || "" : "",
     financialYear: "",
     reimbursementType: "",
     eligibleAmount: "",
@@ -35,21 +45,42 @@ const ReimbursementWithoutPrescription: React.FC<PageProps> = ({ empno, employee
 
   const [formData, setFormData] = useState<ReimburseFormData>(initialState);
   const [submittedData, setSubmittedData] = useState<ReimburseFormData[]>([]);
+  const [reimbTypes, setReimbTypes] = useState<ReImbTypeModel[]>([]);
+  const [medicineEntries, setMedicineEntries] = useState<MedicineEntry[]>([]);
 
-   const handleChange = (
-      e: React.ChangeEvent<
-        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >
-    ) => {
-      const target = e.target as HTMLInputElement;
-      const { name, value, type, checked } = target;
-  
-      setFormData((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    };
-  
+  // ---------------- Medicine Handlers ----------------
+  const handleMedicineChange = (index: number, field: keyof MedicineEntry, value: any) => {
+    setMedicineEntries((prev) =>
+      prev.map((entry, i) =>
+        i === index ? { ...entry, [field]: value } : entry
+      )
+    );
+  };
+
+  const addMedicineRow = () => {
+    setMedicineEntries((prev) => [
+      ...prev,
+      { dependent: "", receiptNo: "", receiptDate: "", claimAmount: "", attachment: null }
+    ]);
+  };
+
+  const removeMedicineRow = (index: number) => {
+    setMedicineEntries((prev) => prev.filter((_, i) => i !== index));
+  };
+ 
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const target = e.target as HTMLInputElement;
+    const { name, value, type, checked } = target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmittedData((prev) => [...prev, formData]);
@@ -71,12 +102,35 @@ const ReimbursementWithoutPrescription: React.FC<PageProps> = ({ empno, employee
     return `${start}-${end.toString().slice(2)}`;
   });
 
+  useEffect(() => {
+    const fetchReimbTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:60266/WS/ReImbWithoutPres.asmx/GetReImbType",
+          { headers: { "Content-Type": "application/json" } }
+        );
+
+        let data = response.data?.d ?? response.data;
+
+        if (typeof data === "string") {
+          data = JSON.parse(data);
+        }
+
+        if (Array.isArray(data)) {
+          setReimbTypes(data);
+        } else {
+          console.error("Unexpected response format:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching reimbursement types:", error);
+      }
+    };
+
+    fetchReimbTypes();
+  }, []);
+
   return (
     <div className="upload-page">
-   
-
-      
-
       <main className="upload-container">
         <form className="form-section" onSubmit={handleSubmit}>
           <h1 className="heading">Reimbursement (No Prescription)</h1>
@@ -87,10 +141,11 @@ const ReimbursementWithoutPrescription: React.FC<PageProps> = ({ empno, employee
               <input
                 type="text"
                 name="empName"
-                value={formData.empName}
+                value={initialState.empName}
                 onChange={handleChange}
                 placeholder="Employee Name*"
                 required
+                autoComplete="off"
               />
               <select
                 name="financialYear"
@@ -116,10 +171,11 @@ const ReimbursementWithoutPrescription: React.FC<PageProps> = ({ empno, employee
                 required
               >
                 <option value="">Select Reimbursement Type</option>
-                <option value="medicine">Medicine</option>
-                <option value="equipment">Medicine Equipments</option>
-                <option value="pathology">Pathology Test</option>
-                <option value="others">Others</option>
+                {reimbTypes.map((reimb) => (
+                  <option key={reimb.Code} value={reimb.Code}>
+                    {reimb.Name}
+                  </option>
+                ))}
               </select>
 
               <input
@@ -213,6 +269,107 @@ const ReimbursementWithoutPrescription: React.FC<PageProps> = ({ empno, employee
             </button>
           </div>
         </form>
+
+        {/* -------- Medicine Section -------- */}
+        {formData.reimbursementType === "Medicine" && (
+          <div className="extra-section">
+            <h2>Medicine Claim Details</h2>
+            <button type="button" className="submit-btn-U" onClick={addMedicineRow}>
+              + Add Receipt
+            </button>
+
+            {medicineEntries.length > 0 && (
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Select Dependent</th>
+                    <th>Receipt No</th>
+                    <th>Receipt Date</th>
+                    <th>Claim Amount</th>
+                    <th>Attachment (PDF &lt; 2MB)</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {medicineEntries.map((entry, index) => (
+                    <tr key={index}>
+                      <td>
+                        <select
+                          value={entry.dependent}
+                          onChange={(e) =>
+                            handleMedicineChange(index, "dependent", e.target.value)
+                          }
+                          required
+                        >
+                          <option value="">Select</option>
+                          <option value="self">Self</option>
+                          <option value="spouse">Spouse</option>
+                          <option value="child">Child</option>
+                          <option value="parent">Parent</option>
+                        </select>
+                      </td>
+
+                      <td>
+                        <input
+                          type="text"
+                          value={entry.receiptNo}
+                          onChange={(e) =>
+                            handleMedicineChange(index, "receiptNo", e.target.value)
+                          }
+                          required
+                        />
+                      </td>
+
+                      <td>
+                        <input
+                          type="date"
+                          value={entry.receiptDate}
+                          onChange={(e) =>
+                            handleMedicineChange(index, "receiptDate", e.target.value)
+                          }
+                          required
+                        />
+                      </td>
+
+                      <td>
+                        <input
+                          type="number"
+                          value={entry.claimAmount}
+                          onChange={(e) =>
+                            handleMedicineChange(index, "claimAmount", e.target.value)
+                          }
+                          required
+                        />
+                      </td>
+
+                      <td>
+                        <input
+                          type="file"
+                          accept="application/pdf"
+                          onChange={(e) =>
+                            handleMedicineChange(index, "attachment", e.target.files?.[0] || null)
+                          }
+                          required
+                        />
+                      </td>
+
+                      <td>
+                        <button
+                          type="button"
+                          className="submit-btn-U"
+                          onClick={() => removeMedicineRow(index)}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+        {/* ---------------------------------- */}
 
         {submittedData.length > 0 && (
           <div className="data-table">

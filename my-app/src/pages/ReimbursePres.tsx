@@ -117,41 +117,41 @@ const ReimburseWithPrescription: React.FC<PageProps> = ({
       }
     };
 
-    const fetchEmployeeNames = async () => {
-      if (searchTerm.trim() === "") {
-        setEmployeeNames([]);
-        return;
-      }
-      try {
-        const response = await axios.get(
-          "http://localhost:60266/WS/StateService.asmx/GetEmployeeNames",
-          {
-            params: { prefix: searchTerm },
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        const data = response.data?.d || response.data;
-        if (Array.isArray(data)) {
-          setEmployeeNames(data);
-        } else {
-          setEmployeeNames([]);
-        }
-      } catch (error) {
-        console.error("Error fetching employee names:", error);
-      }
-    };
+    // const fetchEmployeeNames = async () => {
+    //   if (searchTerm.trim() === "") {
+    //     setEmployeeNames([]);
+    //     return;
+    //   }
+    //   try {
+    //     const response = await axios.get(
+    //       "http://localhost:60266/WS/StateService.asmx/GetEmployeeNames",
+    //       {
+    //         params: { prefix: searchTerm },
+    //         headers: { "Content-Type": "application/json" },
+    //       }
+    //     );
+    //     const data = response.data?.d || response.data;
+    //     if (Array.isArray(data)) {
+    //       setEmployeeNames(data);
+    //     } else {
+    //       setEmployeeNames([]);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching employee names:", error);
+    //   }
+    // };
 
     // Run once on mount → diseases
     fetchDiseases();
     // fetchFinYear();
 
     // Run whenever searchTerm changes → debounce employee search
-    if (searchTerm.trim() !== "") {
-      const debounceId = setTimeout(fetchEmployeeNames, 300);
-      return () => clearTimeout(debounceId);
-    } else {
-      setEmployeeNames([]);
-    }
+    // if (searchTerm.trim() !== "") {
+    //   const debounceId = setTimeout(fetchEmployeeNames, 300);
+    //   return () => clearTimeout(debounceId);
+    // } else {
+    //   setEmployeeNames([]);
+    // }
   }, [searchTerm]);
   // run only once on mount
 
@@ -176,6 +176,7 @@ const ReimburseWithPrescription: React.FC<PageProps> = ({
                 placeholder="Search Employee Name*"
                 autoComplete="off"
                 required
+                
               />
               <select
                 name="financialYear"
@@ -203,6 +204,7 @@ const ReimburseWithPrescription: React.FC<PageProps> = ({
                   name="totalEligibility"
                   value={formData.totalEligibility}
                   onChange={handleChange}
+                  readOnly
                 />
               </div>
 
@@ -214,6 +216,7 @@ const ReimburseWithPrescription: React.FC<PageProps> = ({
                   name="previousBalance"
                   value={formData.previousBalance}
                   onChange={handleChange}
+                  readOnly
                 />
               </div>
 
@@ -225,6 +228,7 @@ const ReimburseWithPrescription: React.FC<PageProps> = ({
                   name="amountClaimed"
                   value={formData.amountClaimed}
                   onChange={handleChange}
+                  readOnly
                 />
               </div>
 
